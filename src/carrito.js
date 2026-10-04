@@ -1,4 +1,5 @@
 // Cálculo del total de un carrito con un cupón de descuento opcional.
+import { gastosEnvio } from './envio.js';
 
 /** Suma precio × cantidad de cada línea. */
 export function subtotal(lineas) {
@@ -16,4 +17,13 @@ export function totalConCupon(lineas, cupon) {
     total += cupon ? linea - linea * (cupon.porcentaje / 100) : linea;
   }
   return Math.round(total * 100) / 100;
+}
+
+/**
+ * Total final del pedido: total con cupón + gastos de envío.
+ * El umbral de envío gratis se aplica sobre el total ya descontado.
+ */
+export function totalConEnvio(lineas, cupon) {
+  const totalCupon = totalConCupon(lineas, cupon);
+  return Math.round((totalCupon + gastosEnvio(totalCupon)) * 100) / 100;
 }
