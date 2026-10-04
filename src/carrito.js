@@ -14,6 +14,11 @@ export function subtotal(lineas) {
   return lineas.reduce((acc, l) => acc + l.precio * l.cantidad, 0);
 }
 
+/** Devuelve el total de unidades (suma de cantidades) del carrito. */
+export function contarUnidades(lineas) {
+  return lineas.reduce((acc, l) => acc + l.cantidad, 0);
+}
+
 /**
  * Aplica un cupón porcentual al subtotal y redondea a céntimos.
  * Un cupón { porcentaje: 10 } descuenta el 10 % una sola vez sobre el subtotal.

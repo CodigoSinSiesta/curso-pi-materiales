@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { subtotal, totalConCupon, totalConEnvio, aplicarIVA } from '../src/carrito.js';
+import { subtotal, contarUnidades, totalConCupon, totalConEnvio, aplicarIVA } from '../src/carrito.js';
 
 const lineas = [
   { nombre: 'Taza', precio: 8.5, cantidad: 2 },
@@ -9,6 +9,14 @@ const lineas = [
 
 test('subtotal suma precio por cantidad', () => {
   assert.equal(subtotal(lineas), 29);
+});
+
+test('contarUnidades suma las cantidades de las líneas', () => {
+  assert.equal(contarUnidades(lineas), 5); // 2 + 3
+});
+
+test('contarUnidades devuelve 0 con un carrito vacío', () => {
+  assert.equal(contarUnidades([]), 0);
 });
 
 test('sin cupón el total es el subtotal', () => {
