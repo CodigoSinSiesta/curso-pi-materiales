@@ -12,3 +12,10 @@ test('envío gratis a partir de 40 €', () => {
   assert.equal(gastosEnvio(50), 0);
   assert.equal(gastosEnvio(120.5), 0);
 });
+
+test('gastosEnvio lanza TypeError con subtotales inválidos', () => {
+  const invalidos = [NaN, Infinity, -Infinity, -1, -0.01, '10', null, undefined, {}, []];
+  for (const valor of invalidos) {
+    assert.throws(() => gastosEnvio(valor), TypeError);
+  }
+});
