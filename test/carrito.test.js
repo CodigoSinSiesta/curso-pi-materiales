@@ -19,15 +19,28 @@ test('un cupón del 10 % descuenta una sola vez', () => {
   assert.equal(totalConCupon(lineas, { porcentaje: 10 }), 26.1);
 });
 
-test('totalConEnvio suma el envío cuando no llega al umbral', () => {
-  assert.equal(totalConEnvio(lineas), 33.95); // 29 + 4.95
-  assert.equal(totalConEnvio(lineas, { porcentaje: 10 }), 31.05); // 26.1 + 4.95
+test('totalConEnvio aplica el IVA a los productos y suma el envío', () => {
+  // 29 × 1.21 = 35.09; envío calculado sin IVA: 29 < 40 → 4.95
+  assert.equal(totalConEnvio(lineas), 40.04);
+  // 29 - 10 % = 26.1; 26.1 × 1.21 = 31.581 → 31.58; + 4.95
+  assert.equal(totalConEnvio(lineas, { porcentaje: 10 }), 36.53);
 });
 
-test('totalConEnvio es gratis a partir de 40 € sobre el total descontado', () => {
-  assert.equal(totalConEnvio([{ precio: 40, cantidad: 1 }], { porcentaje: 0 }), 40);
-  // 50 - 10 % = 45 ≥ 40, aunque el subtotal original es 50
-  assert.equal(totalConEnvio([{ precio: 50, cantidad: 1 }], { porcentaje: 10 }), 45);
+test('totalConEnvio es gratis a partir de 40 € sobre el total sin IVA', () => {
+  // 40 sin IVA ≥ 40 → envío gratis; 40 × 1.21 = 48.4
+  assert.equal(totalConEnvio([{ precio: 40, cantidad: 1 }], { porcentaje: 0 }), 48.4);
+  // 50 - 10 % = 45 ≥ 40 → envío gratis; 45 × 1.21 = 54.45
+  assert.equal(totalConEnvio([{ precio: 50, cantidad: 1 }], { porcentaje: 10 }), 54.45);
+});
+
+test('el envío se decide con el total SIN IVA, no con el total con IVA', () => {
+  // 35 sin IVA < 40 → paga envío; 35 × 1.21 = 42.35 + 4.95
+  assert.equal(totalConEnvio([{ precio: 35, cantidad: 1 }]), 47.3);
+});
+
+test('totalConEnvio acepta un tipo de IVA distinto', () => {
+  // 40 sin IVA ≥ 40 → envío gratis; 40 × 1.10 = 44
+  assert.equal(totalConEnvio([{ precio: 40, cantidad: 1 }], undefined, 10), 44);
 });
 
 test('aplicarIVA usa el 21 % por defecto', () => {

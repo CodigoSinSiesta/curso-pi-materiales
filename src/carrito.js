@@ -28,10 +28,12 @@ export function totalConCupon(lineas, cupon) {
 }
 
 /**
- * Total final del pedido: total con cupón + gastos de envío.
- * El umbral de envío gratis se aplica sobre el total ya descontado.
+ * Total final del pedido: IVA aplicado a los productos + gastos de envío.
+ * El envío se calcula sobre el total con cupón SIN IVA (el umbral de envío
+ * gratis también se evalúa sin IVA) y el IVA se aplica solo a los productos.
  */
-export function totalConEnvio(lineas, cupon) {
+export function totalConEnvio(lineas, cupon, tipoIVA = 21) {
   const totalCupon = totalConCupon(lineas, cupon);
-  return Math.round((totalCupon + gastosEnvio(totalCupon)) * 100) / 100;
+  const envio = gastosEnvio(totalCupon);
+  return Math.round((aplicarIVA(totalCupon, tipoIVA) + envio) * 100) / 100;
 }
