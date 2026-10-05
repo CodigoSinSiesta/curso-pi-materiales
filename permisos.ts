@@ -1,0 +1,46 @@
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { relative } from "node:path";
+
+// Herramientas que solo leen: pasan sin preguntar.
+const LECTURA = ["read", "grep", "find", "ls", "ejecutar_tests"];
+// Comandos de bash que tampoco cambian nada.
+const SEGURO = /^(cd|ls|cat|head|tail|wc|grep|echo|git (status|log|diff)|node --test|npm test)\b/;
+
+// Un comando es seguro si cada trozo (separado por &&, ; o |) lo es y no redirige nada.
+function bashSeguro(comando: string) {
+  comando = comando.replaceAll("2>&1", "");
+  if (/[<>`]|\$\(/.test(comando)) return false;
+  return comando.split(/&&|\|\||;|\|/).every((trozo) => SEGURO.test(trozo.trim()));
+}
+
+export default function (pi: ExtensionAPI) {
+  const siempre = new Set<string>(); // lo aprobado con «Permitir siempre» en esta sesión
+  let aprobadas = 0;
+  let bloqueadas = 0;
+
+  pi.on("tool_call", async (event, ctx) => {
+    if (LECTURA.includes(event.toolName)) return;
+
+    const que =
+      event.toolName === "bash" ? String(event.input.command) : `${event.toolName} ${relative(ctx.cwd, String(event.input.path ?? ""))}`;
+    if (event.toolName === "bash" && bashSeguro(que)) return;
+    if (siempre.has(que)) return;
+
+    // Sin interfaz (pi -p, JSON) no hay a quién preguntar: se bloquea.
+    if (!ctx.hasUI) return { block: true, reason: "Sin interfaz para aprobar la acción" };
+
+    const opcion = await ctx.ui.select(`Pi quiere ejecutar:\n\n  ${que}\n`, [
+      "Permitir",
+      "Permitir siempre en esta sesión",
+      "Bloquear",
+    ]);
+    if (opcion === "Permitir siempre en esta sesión") siempre.add(que);
+    if (opcion?.startsWith("Permitir")) {
+      aprobadas++;
+    } else {
+      bloqueadas++;
+    }
+    ctx.ui.setStatus("permisos", `permisos: ${aprobadas} aprobadas · ${bloqueadas} bloqueadas`);
+    if (!opcion?.startsWith("Permitir")) return { block: true, reason: "El usuario lo ha bloqueado" };
+  });
+}
