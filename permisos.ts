@@ -8,7 +8,7 @@ const SEGURO = /^(cd|ls|cat|head|tail|wc|grep|echo|git (status|log|diff)|node --
 
 // Un comando es seguro si cada trozo (separado por &&, ; o |) lo es y no redirige nada.
 function bashSeguro(comando: string) {
-  comando = comando.replaceAll("2>&1", "");
+  comando = comando.replace(/2>(&1|\/dev\/null)/g, ""); // estas redirecciones no escriben nada
   if (/[<>`]|\$\(/.test(comando)) return false;
   return comando.split(/&&|\|\||;|\|/).every((trozo) => SEGURO.test(trozo.trim()));
 }
