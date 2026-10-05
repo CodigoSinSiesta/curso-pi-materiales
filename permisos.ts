@@ -6,6 +6,9 @@ const LECTURA = ["read", "grep", "find", "ls", "ejecutar_tests"];
 // Comandos de bash que tampoco cambian nada.
 const SEGURO = /^(cd|ls|cat|head|tail|wc|grep|echo|git (status|log|diff)|node --test|npm test)\b/;
 
+// Rutas que nunca se tocan, ni preguntando.
+const PROTEGIDAS = ["AGENTS.md", ".git/"];
+
 // Un comando es seguro si cada trozo (separado por &&, ; o |) lo es y no redirige nada.
 function bashSeguro(comando: string) {
   comando = comando.replace(/2>(&1|\/dev\/null)/g, ""); // estas redirecciones no escriben nada
@@ -21,8 +24,14 @@ export default function (pi: ExtensionAPI) {
   pi.on("tool_call", async (event, ctx) => {
     if (LECTURA.includes(event.toolName)) return;
 
+    const ruta = relative(ctx.cwd, String(event.input.path ?? ""));
+    if ((event.toolName === "write" || event.toolName === "edit") && PROTEGIDAS.some((p) => ruta.startsWith(p))) {
+      ctx.ui.notify(`Ruta protegida: ${ruta}`, "warning");
+      return { block: true, reason: `${ruta} está protegido y no se puede modificar` };
+    }
+
     const que =
-      event.toolName === "bash" ? String(event.input.command) : `${event.toolName} ${relative(ctx.cwd, String(event.input.path ?? ""))}`;
+      event.toolName === "bash" ? String(event.input.command) : `${event.toolName} ${ruta}`;
     if (event.toolName === "bash" && bashSeguro(que)) return;
     if (siempre.has(que)) return;
 
