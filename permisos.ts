@@ -17,16 +17,16 @@ function bashSeguro(comando: string) {
 }
 
 export default function (pi: ExtensionAPI) {
-  const siempre = new Set<string>(); // lo aprobado con «Permitir siempre» en esta sesión
+  const siempre = new Set<string>(); // lo aprobado con «Permitir siempre» en esta rama
   let aprobadas = 0;
   let bloqueadas = 0;
 
-  // Rehace el estado a partir de las decisiones guardadas en la sesión.
+  // Rehace el estado a partir de las decisiones guardadas en la rama activa.
   function reconstruir(ctx: ExtensionContext) {
     siempre.clear();
     aprobadas = 0;
     bloqueadas = 0;
-    for (const entrada of ctx.sessionManager.getEntries()) {
+    for (const entrada of ctx.sessionManager.getBranch()) {
       if (entrada.type !== "custom" || entrada.customType !== "permisos") continue;
       const { que, decision } = entrada.data as { que: string; decision: string };
       if (decision === "bloquear") bloqueadas++;
@@ -36,6 +36,7 @@ export default function (pi: ExtensionAPI) {
     ctx.ui.setStatus("permisos", `permisos: ${aprobadas} aprobadas · ${bloqueadas} bloqueadas`);
   }
   pi.on("session_start", async (_event, ctx) => reconstruir(ctx));
+  pi.on("session_tree", async (_event, ctx) => reconstruir(ctx));
 
   pi.on("tool_call", async (event, ctx) => {
     if (LECTURA.includes(event.toolName)) return;
@@ -56,10 +57,10 @@ export default function (pi: ExtensionAPI) {
 
     const opcion = await ctx.ui.select(`Pi quiere ejecutar:\n\n  ${que}\n`, [
       "Permitir",
-      "Permitir siempre en esta sesión",
+      "Permitir siempre en esta rama",
       "Bloquear",
     ]);
-    const decision = opcion === "Permitir" ? "una" : opcion === "Permitir siempre en esta sesión" ? "siempre" : "bloquear";
+    const decision = opcion === "Permitir" ? "una" : opcion === "Permitir siempre en esta rama" ? "siempre" : "bloquear";
     pi.appendEntry("permisos", { que, decision }); // la decisión queda guardada en la sesión
     if (decision === "siempre") siempre.add(que);
     if (decision === "bloquear") {
