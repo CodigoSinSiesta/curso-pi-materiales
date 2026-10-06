@@ -1,7 +1,7 @@
 // Coste de envío según el subtotal del pedido.
 
 const COSTE_ENVIO = 4.95;
-const LIMITE_GRATIS = 40;
+const LIMITE_GRATIS = 50;
 
 /**
  * Devuelve los gastos de envío para un subtotal.
