@@ -1,0 +1,42 @@
+name: Revisión con Pi
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.0.4
+      # Lo que protege el pipeline sale de la rama base, no del pull request.
+      - name: Script y permisos desde la rama base
+        run: |
+          git show "origin/${{ github.base_ref }}:scripts/revisar.sh" > "$RUNNER_TEMP/revisar.sh"
+          git show "origin/${{ github.base_ref }}:ci/permisos.ts" > "$RUNNER_TEMP/permisos.ts"
+      # Los tests son código de la rama: se ejecutan en un paso sin la clave.
+      - name: Tests
+        id: tests
+        run: |
+          set +e
+          npm test; echo "codigo=$?" >> "$GITHUB_OUTPUT"
+      - name: Revisar la rama
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          PI_CODING_AGENT_DIR: ${{ runner.temp }}/pi-agent
+          PI_SKIP_VERSION_CHECK: "1"
+          PERMISOS: ${{ runner.temp }}/permisos.ts
+          PI_TOOLS: read,grep,find,ls
+          SALIDA: ${{ runner.temp }}/revision
+          TESTS: ${{ steps.tests.outputs.codigo }}
+        run: bash "$RUNNER_TEMP/revisar.sh" "origin/${{ github.base_ref }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: revision-pi
+          path: ${{ runner.temp }}/revision/
