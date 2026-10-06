@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { relative } from "node:path";
 
 // Herramientas que solo leen: pasan sin preguntar.
@@ -20,6 +20,22 @@ export default function (pi: ExtensionAPI) {
   const siempre = new Set<string>(); // lo aprobado con «Permitir siempre» en esta sesión
   let aprobadas = 0;
   let bloqueadas = 0;
+
+  // Rehace el estado a partir de las decisiones guardadas en la sesión.
+  function reconstruir(ctx: ExtensionContext) {
+    siempre.clear();
+    aprobadas = 0;
+    bloqueadas = 0;
+    for (const entrada of ctx.sessionManager.getEntries()) {
+      if (entrada.type !== "custom" || entrada.customType !== "permisos") continue;
+      const { que, decision } = entrada.data as { que: string; decision: string };
+      if (decision === "bloquear") bloqueadas++;
+      else aprobadas++;
+      if (decision === "siempre") siempre.add(que);
+    }
+    ctx.ui.setStatus("permisos", `permisos: ${aprobadas} aprobadas · ${bloqueadas} bloqueadas`);
+  }
+  pi.on("session_start", async (_event, ctx) => reconstruir(ctx));
 
   pi.on("tool_call", async (event, ctx) => {
     if (LECTURA.includes(event.toolName)) return;
@@ -43,13 +59,15 @@ export default function (pi: ExtensionAPI) {
       "Permitir siempre en esta sesión",
       "Bloquear",
     ]);
-    if (opcion === "Permitir siempre en esta sesión") siempre.add(que);
-    if (opcion?.startsWith("Permitir")) {
-      aprobadas++;
-    } else {
+    const decision = opcion === "Permitir" ? "una" : opcion === "Permitir siempre en esta sesión" ? "siempre" : "bloquear";
+    pi.appendEntry("permisos", { que, decision }); // la decisión queda guardada en la sesión
+    if (decision === "siempre") siempre.add(que);
+    if (decision === "bloquear") {
       bloqueadas++;
+    } else {
+      aprobadas++;
     }
     ctx.ui.setStatus("permisos", `permisos: ${aprobadas} aprobadas · ${bloqueadas} bloqueadas`);
-    if (!opcion?.startsWith("Permitir")) return { block: true, reason: "El usuario lo ha bloqueado" };
+    if (decision === "bloquear") return { block: true, reason: "El usuario lo ha bloqueado" };
   });
 }
