@@ -19,14 +19,23 @@
       "area": "ticket",
       "titulo": "Formatear euros",
       "comportamiento": "formatearEuros(importe), en src/ticket.js, devuelve el importe con dos decimales, coma decimal y el símbolo del euro.",
-      "estado": "sin_empezar",
+      "estado": "pasa",
       "verificacion": [
         "node --test test/ticket.test.js",
         "4.95 → \"4,95 €\"; 10 → \"10,00 €\"; 0 → \"0,00 €\"; 1234.5 → \"1234,50 €\"",
         "Lanza TypeError si el importe no es un número finito mayor o igual que 0."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "3 pass / 0 fail"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "18 pass / 0 fail (incluye las 3 nuevas de formatearEuros)"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. Redondeo a céntimos con Math.round(importe * 100) / 100 antes de toFixed(2)."
     },
     {
       "id": "ticket-002",
