@@ -8,7 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; siguiente `ticket-003` (Ticket completo)
+- Funcionalidad en curso: ninguna; no quedan funcionalidades pendientes
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
@@ -40,3 +40,14 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Commits: `tienda: añade lineaTicket al ticket`; `tienda: añade pruebas de lineaTicket al ticket` (esta sesión).
 - Riesgos: ninguno.
 - Siguiente paso: `ticket-003` (Ticket completo).
+
+### 2026-10-16 · Pi · ticket-003 (Ticket completo)
+
+- Objetivo: implementar `ticket(lineas, cupon)` en `src/ticket.js` y sus pruebas en `test/ticket.test.js`.
+- Completado: una línea por producto con `lineaTicket`, la línea del envío y la del total, formateadas con
+  `formatearEuros`. Pruebas con un carrito de 20 € (con y sin cupón) y otro de 60 € con cupón.
+- Verificación ejecutada: `npm test` → 24 pass / 0 fail.
+- Evidencia: todas las pruebas pasan.
+- Commits: `tienda: añade ticket`; `tienda: marca ticket-003 como pasa` (esta sesión).
+- Riesgos: ninguno.
+- Siguiente paso: ninguno; las tres funcionalidades pasan.
