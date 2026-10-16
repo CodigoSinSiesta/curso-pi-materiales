@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatearEuros } from '../src/ticket.js';
+import { formatearEuros, lineaTicket } from '../src/ticket.js';
 
 test('formatearEuros usa dos decimales, coma y el símbolo del euro', () => {
   assert.equal(formatearEuros(4.95), '4,95 €');
@@ -19,4 +19,25 @@ test('formatearEuros lanza TypeError con importes inválidos', () => {
   for (const valor of invalidos) {
     assert.throws(() => formatearEuros(valor), TypeError);
   }
+});
+
+test('lineaTicket formatea varias unidades con importes en euros', () => {
+  assert.equal(
+    lineaTicket({ nombre: 'Taza', precio: 4.5, cantidad: 2 }),
+    '2 x Taza  4,50 € = 9,00 €'
+  );
+});
+
+test('lineaTicket con una sola unidad', () => {
+  assert.equal(
+    lineaTicket({ nombre: 'Lápiz', precio: 1.25, cantidad: 1 }),
+    '1 x Lápiz  1,25 € = 1,25 €'
+  );
+});
+
+test('lineaTicket redondea el importe a céntimos', () => {
+  assert.equal(
+    lineaTicket({ nombre: 'Bolígrafo', precio: 0.1, cantidad: 3 }),
+    '3 x Bolígrafo  0,10 € = 0,30 €'
+  );
 });

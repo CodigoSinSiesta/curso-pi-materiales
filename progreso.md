@@ -8,8 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: `ticket-002` (Línea de ticket), sin pruebas todavía
-- Siguiente funcionalidad: `ticket-003` (Ticket completo)
+- Funcionalidad en curso: ninguna; siguiente `ticket-003` (Ticket completo)
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
@@ -29,13 +28,15 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Riesgos: ninguno.
 - Siguiente paso: `ticket-002` (Línea de ticket).
 
-### 2026-10-16 · Pi · ticket-002 (Línea de ticket) — en curso
+### 2026-10-16 · Pi · ticket-002 (Línea de ticket)
 
-- Objetivo: implementar `lineaTicket(linea)` en `src/ticket.js`; de momento solo la función, sin pruebas.
+- Objetivo: implementar `lineaTicket(linea)` en `src/ticket.js` y su prueba en `test/ticket.test.js`.
 - Completado: función que devuelve `"<cantidad> x <nombre>  <precio> = <importe>"` usando `formatearEuros`
-  (`precio * cantidad` se redondea a céntimos al formatear).
-- Verificación ejecutada: `npm test` → 18 pass / 0 fail (no hay pruebas nuevas de `lineaTicket`).
-- Evidencia manual: `{ nombre: 'Taza', precio: 4.5, cantidad: 2 }` → `"2 x Taza  4,50 € = 9,00 €"`.
-- Commits: `tienda: añade lineaTicket al ticket` (esta sesión).
-- Riesgos: `ticket-002` sigue `en_curso` y sin prueba; no se marca `pasa` sin la verificación del JSON.
-- Siguiente paso: añadir `test/ticket.test.js` para `lineaTicket` y ejecutar la verificación.
+  (`precio * cantidad` se redondea a céntimos al formatear). Pruebas añadidas: varias unidades, una unidad
+  y redondeo a céntimos.
+- Verificación ejecutada: `node --test test/ticket.test.js` → 6 pass / 0 fail; `npm test` → 21 pass / 0 fail.
+- Evidencia: `{ nombre: 'Taza', precio: 4.5, cantidad: 2 }` → `"2 x Taza  4,50 € = 9,00 €"`;
+  `{ nombre: 'Bolígrafo', precio: 0.1, cantidad: 3 }` → `"3 x Bolígrafo  0,10 € = 0,30 €"`.
+- Commits: `tienda: añade lineaTicket al ticket`; `tienda: añade pruebas de lineaTicket al ticket` (esta sesión).
+- Riesgos: ninguno.
+- Siguiente paso: `ticket-003` (Ticket completo).

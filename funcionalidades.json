@@ -43,14 +43,23 @@
       "area": "ticket",
       "titulo": "Línea de ticket",
       "comportamiento": "lineaTicket(linea), con linea = { nombre, precio, cantidad }, devuelve \"<cantidad> x <nombre>  <precio> = <importe>\" con los importes formateados con formatearEuros.",
-      "estado": "en_curso",
+      "estado": "pasa",
       "verificacion": [
         "node --test test/ticket.test.js",
         "{ nombre: 'Taza', precio: 4.5, cantidad: 2 } → \"2 x Taza  4,50 € = 9,00 €\"",
         "Con una sola unidad y con varias; el importe se redondea a céntimos."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "6 pass / 0 fail"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "21 pass / 0 fail (incluye las 3 nuevas de lineaTicket)"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. lineaTicket usa formatearEuros para precio e importe (precio * cantidad), así el redondeo a céntimos es el del formateador."
     },
     {
       "id": "ticket-003",
