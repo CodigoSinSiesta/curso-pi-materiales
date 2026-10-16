@@ -58,6 +58,17 @@ test('ticket por debajo de 40 € con cupón', () => {
   );
 });
 
+test('ticket calcula el envío sobre el total con cupón, no sobre el subtotal', () => {
+  // 42 € - 10 % = 37,80 € (por debajo de 40 €): envío 4,95 €; 37,80 × 1,21 = 45,74 + 4,95 = 50,69
+  assert.equal(
+    ticket(
+      [{ nombre: 'Mochila', precio: 30, cantidad: 1 }, { nombre: 'Libreta', precio: 4, cantidad: 3 }],
+      { porcentaje: 10 }
+    ),
+    '1 x Mochila  30,00 € = 30,00 €\n3 x Libreta  4,00 € = 12,00 €\nEnvío: 4,95 €\nTotal: 50,69 €'
+  );
+});
+
 test('ticket por encima de 40 € con cupón: envío gratis', () => {
   // 60 € - 10 % = 54; 54 × 1,21 = 65,34; envío 0
   assert.equal(
