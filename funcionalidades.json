@@ -68,8 +68,10 @@
       "titulo": "Ticket completo",
       "comportamiento": "ticket(lineas, cupon) devuelve el texto completo: una línea por producto, una línea de envío y una de total, con totalConEnvio y gastosEnvio.",
       "estado": "sin_empezar",
+      "rubrica": "rubricas/ticket-003.md",
       "verificacion": [
-        "node --test test/ticket.test.js",
+        "./verificar.sh ticket-003",
+        "Criterios en rubricas/ticket-003.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
         "Un carrito por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
       ],
       "evidencias": [],

@@ -28,9 +28,8 @@ https://github.com/walkinglabs/learn-harness-engineering); ver `LICENSE-learn-ha
 - Mensajes de commit en español y en imperativo, empezando por `tienda:`.
 
 ## Hecho significa
-- Has añadido o actualizado la prueba del cambio.
-- Has ejecutado `npm test` y pasa.
-- Has resumido qué cambió y cómo lo verificaste.
+- Una funcionalidad pasa solo si `./verificar.sh <id>` sale con 0; la evidencia es su salida.
+- No toques `rubricas/`, `aceptacion/` ni `verificar.sh`.
 
 ## Al terminar
 1. Actualiza `funcionalidades.json` (estado, evidencias y notas) y `progreso.md` (estado verificado y una entrada
