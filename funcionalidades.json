@@ -118,6 +118,22 @@
         }
       ],
       "notas": "Implementado en src/desglose.js. desglose reutiliza totalConCupon, aplicarIVA, gastosEnvio y totalConEnvio; iva se redondea a céntimos como Math.round((aplicarIVA(base, tipoIVA) − base) * 100) / 100, así base + iva + envio cuadra con total. Las pruebas llevan los importes escritos a mano a ambos lados del umbral (40 €) y con y sin cupón."
+    },
+    {
+      "id": "ticket-005",
+      "prioridad": 5,
+      "area": "pedido",
+      "titulo": "Cupón de importe fijo",
+      "comportamiento": "totalConCupon(lineas, cupon), en src/carrito.js, acepta también un cupón { importe } en euros: resta ese importe una sola vez al subtotal (no a cada línea), antes del IVA y del envío, y el resultado nunca baja de 0. Un importe que no sea un número finito mayor que 0 lanza TypeError. El cupón { porcentaje } no cambia. totalConEnvio, desglose y ticket lo usan sin cambios.",
+      "estado": "sin_empezar",
+      "rubrica": "rubricas/ticket-005.md",
+      "verificacion": [
+        "./verificar.sh ticket-005",
+        "Criterios en rubricas/ticket-005.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
+        "Un pedido de varias líneas por debajo de 40 € con el cupón (con envío) y otro que queda justo en 40 € (envío 0,00 €)."
+      ],
+      "evidencias": [],
+      "notas": ""
     }
   ]
 }

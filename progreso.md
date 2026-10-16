@@ -5,10 +5,10 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 
 ## Estado verificado
 
-- Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
+- Raíz del repositorio: `~/csn/tienda`, rama `final`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; `ticket-004` en `pasa` y el resto también en `pasa`.
+- Funcionalidad en curso: ninguna; `ticket-005` sin empezar y el resto en `pasa`.
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
