@@ -1,0 +1,61 @@
+{
+  "proyecto": "tienda",
+  "actualizado": "2026-10-16",
+  "reglas": {
+    "una_sola_en_curso": true,
+    "pasa_requiere_evidencia": true,
+    "no_cambiar_la_verificacion": true
+  },
+  "leyenda_estados": {
+    "sin_empezar": "Nadie ha empezado.",
+    "en_curso": "Es la tarea activa.",
+    "bloqueada": "No puede avanzar hasta resolver un bloqueo anotado en notas.",
+    "pasa": "La verificación se ha ejecutado, pasa y la evidencia está anotada."
+  },
+  "funcionalidades": [
+    {
+      "id": "ticket-001",
+      "prioridad": 1,
+      "area": "ticket",
+      "titulo": "Formatear euros",
+      "comportamiento": "formatearEuros(importe), en src/ticket.js, devuelve el importe con dos decimales, coma decimal y el símbolo del euro.",
+      "estado": "sin_empezar",
+      "verificacion": [
+        "node --test test/ticket.test.js",
+        "4.95 → \"4,95 €\"; 10 → \"10,00 €\"; 0 → \"0,00 €\"; 1234.5 → \"1234,50 €\"",
+        "Lanza TypeError si el importe no es un número finito mayor o igual que 0."
+      ],
+      "evidencias": [],
+      "notas": ""
+    },
+    {
+      "id": "ticket-002",
+      "prioridad": 2,
+      "area": "ticket",
+      "titulo": "Línea de ticket",
+      "comportamiento": "lineaTicket(linea), con linea = { nombre, precio, cantidad }, devuelve \"<cantidad> x <nombre>  <precio> = <importe>\" con los importes formateados con formatearEuros.",
+      "estado": "sin_empezar",
+      "verificacion": [
+        "node --test test/ticket.test.js",
+        "{ nombre: 'Taza', precio: 4.5, cantidad: 2 } → \"2 x Taza  4,50 € = 9,00 €\"",
+        "Con una sola unidad y con varias; el importe se redondea a céntimos."
+      ],
+      "evidencias": [],
+      "notas": ""
+    },
+    {
+      "id": "ticket-003",
+      "prioridad": 3,
+      "area": "ticket",
+      "titulo": "Ticket completo",
+      "comportamiento": "ticket(lineas, cupon) devuelve el texto completo: una línea por producto, una línea de envío y una de total, con totalConEnvio y gastosEnvio.",
+      "estado": "sin_empezar",
+      "verificacion": [
+        "node --test test/ticket.test.js",
+        "Un carrito por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
+      ],
+      "evidencias": [],
+      "notas": ""
+    }
+  ]
+}
