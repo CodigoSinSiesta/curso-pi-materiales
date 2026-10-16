@@ -19,8 +19,13 @@ done
 node -e 'const f=JSON.parse(require("fs").readFileSync("funcionalidades.json","utf8"));
   const m=f.funcionalidades.filter(x=>x.estado==="pasa"&&!(x.evidencias||[]).length).map(x=>x.id);
   if(m.length){console.log("ERROR: "+m.join(", ")+" en pasa sin evidencias.\nPOR QUÉ: pasa exige la verificación ejecutada y anotada.\nCÓMO: ejecuta ./verificar.sh y anota su salida.");process.exit(1)}' || fallo=1   # A4
-git diff --quiet rubrica-ticket-003 -- rubricas aceptacion verificar.sh || {   # A5
-  echo "ERROR: la verificación ha cambiado desde rubrica-ticket-003."
+base=$(git describe --tags --abbrev=0 --match 'rubrica-*' 2>/dev/null) || base=""   # A5: última rúbrica
+if [ -z "$base" ]; then
+  echo "ERROR: no hay ninguna etiqueta rubrica-* en la historia."; echo "POR QUÉ: A5 compara con la última rúbrica."
+  echo "CÓMO: etiqueta el commit de la rúbrica (git tag rubrica-<id>)."; fallo=1
+else git diff --quiet "$base" -- rubricas aceptacion verificar.sh || {
+  echo "ERROR: la verificación ha cambiado desde $base."
   echo "POR QUÉ: quien hace el trabajo no cambia la verificación."
-  echo "CÓMO: git checkout rubrica-ticket-003 -- rubricas aceptacion verificar.sh"; fallo=1; }
+  echo "CÓMO: git checkout $base -- rubricas aceptacion verificar.sh"; fallo=1; }
+fi
 exit $fallo

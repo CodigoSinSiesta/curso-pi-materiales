@@ -18,7 +18,7 @@ evaluador y *sprint contract*. Escrita antes del trabajo; quien implementa no la
 | A2 | Ejecución | `npm test` pasa |
 | A3 | Sistema | Pasa la prueba de aceptación `aceptacion/ticket-003.mjs` |
 | A4 | Evidencia | Ninguna funcionalidad en `pasa` con `evidencias` vacío |
-| A5 | Verificación intacta | `rubricas/`, `aceptacion/` y `verificar.sh` sin cambios desde la etiqueta `rubrica-ticket-003` |
+| A5 | Verificación intacta | `rubricas/`, `aceptacion/` y `verificar.sh` sin cambios desde la última etiqueta `rubrica-*` (al escribirla, `rubrica-ticket-003`) |
 
 ## Criterios de juicio (0–2; los puntúa un revisor con evidencia fichero:línea)
 

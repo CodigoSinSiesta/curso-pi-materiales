@@ -8,7 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; todas `pasa`.
+- Funcionalidad en curso: ninguna; `ticket-004` en `sin_empezar`, el resto en `pasa`.
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones

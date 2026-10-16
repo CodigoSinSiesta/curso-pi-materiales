@@ -89,6 +89,22 @@
         }
       ],
       "notas": "Implementado en src/ticket.js. ticket reutiliza lineaTicket, gastosEnvio(totalConCupon(lineas, cupon)) y totalConEnvio(lineas, cupon); el texto es una línea por producto, «Envío  <importe>» y «Total  <importe>»."
+    },
+    {
+      "id": "ticket-004",
+      "prioridad": 4,
+      "area": "pedido",
+      "titulo": "Desglose del pedido",
+      "comportamiento": "desglose(lineas, cupon, tipoIVA = 21), en un fichero nuevo src/desglose.js, devuelve { base, iva, envio, total } en euros redondeados a céntimos: base es el total con cupón sin IVA (totalConCupon), iva es aplicarIVA(base, tipoIVA) − base, envio es gastosEnvio(base) y total es totalConEnvio(lineas, cupon, tipoIVA); base + iva + envio es igual a total.",
+      "estado": "sin_empezar",
+      "rubrica": "rubricas/ticket-004.md",
+      "verificacion": [
+        "./verificar.sh ticket-004",
+        "Criterios en rubricas/ticket-004.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
+        "Un pedido por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
+      ],
+      "evidencias": [],
+      "notas": ""
     }
   ]
 }
