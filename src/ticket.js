@@ -11,3 +11,11 @@ export function formatearEuros(importe) {
   const redondeado = Math.round(importe * 100) / 100;
   return `${redondeado.toFixed(2).replace('.', ',')} €`;
 }
+
+/**
+ * Devuelve la línea de ticket de un producto, con la forma
+ * "<cantidad> x <nombre>  <precio> = <importe>", formateando los importes.
+ */
+export function lineaTicket({ nombre, precio, cantidad }) {
+  return `${cantidad} x ${nombre}  ${formatearEuros(precio)} = ${formatearEuros(precio * cantidad)}`;
+}

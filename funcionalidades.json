@@ -43,7 +43,7 @@
       "area": "ticket",
       "titulo": "Línea de ticket",
       "comportamiento": "lineaTicket(linea), con linea = { nombre, precio, cantidad }, devuelve \"<cantidad> x <nombre>  <precio> = <importe>\" con los importes formateados con formatearEuros.",
-      "estado": "sin_empezar",
+      "estado": "en_curso",
       "verificacion": [
         "node --test test/ticket.test.js",
         "{ nombre: 'Taza', precio: 4.5, cantidad: 2 } → \"2 x Taza  4,50 € = 9,00 €\"",
