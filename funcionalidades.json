@@ -96,15 +96,24 @@
       "area": "pedido",
       "titulo": "Desglose del pedido",
       "comportamiento": "desglose(lineas, cupon, tipoIVA = 21), en un fichero nuevo src/desglose.js, devuelve { base, iva, envio, total } en euros redondeados a céntimos: base es el total con cupón sin IVA (totalConCupon), iva es aplicarIVA(base, tipoIVA) − base, envio es gastosEnvio(base) y total es totalConEnvio(lineas, cupon, tipoIVA); base + iva + envio es igual a total.",
-      "estado": "sin_empezar",
+      "estado": "pasa",
       "rubrica": "rubricas/ticket-004.md",
       "verificacion": [
         "./verificar.sh ticket-004",
         "Criterios en rubricas/ticket-004.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
         "Un pedido por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "./verificar.sh ticket-004",
+          "resultado": "exit 0 (A1–A5 en verde)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "27 pass / 0 fail (incluye las 3 nuevas de desglose)"
+        }
+      ],
+      "notas": "Implementado en src/desglose.js. base con totalConCupon, envío con gastosEnvio, total con totalConEnvio e IVA como total − base − envío, así el desglose siempre cuadra."
     }
   ]
 }

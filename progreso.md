@@ -8,7 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; `ticket-004` en `sin_empezar`, el resto en `pasa`.
+- Funcionalidad en curso: ninguna; todas `pasa`.
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
@@ -53,3 +53,15 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Commits: `tienda: añade ticket completo al ticket` (esta sesión).
 - Riesgos: ninguno.
 - Siguiente paso: ninguno (todas las funcionalidades en `pasa`).
+
+### 2026-10-16 · omp · ticket-004 (Desglose del pedido)
+
+- Objetivo: implementar `desglose(lineas, cupon, tipoIVA)` en `src/desglose.js` y sus pruebas en
+  `test/desglose.test.js`.
+- Completado: base con `totalConCupon`, envío con `gastosEnvio`, total con `totalConEnvio` e IVA por diferencia, para
+  que el desglose cuadre siempre con el total. Pruebas: total, base y suma con y sin cupón.
+- Verificación ejecutada: `./verificar.sh ticket-004` → exit 0; `npm test` → 27 pass / 0 fail.
+- Evidencia: `{ Mochila 30×1, Libreta 4×3 }` con cupón 10 % → total 50,69 €, y base + IVA + envío = total.
+- Commits: `tienda: añade el desglose del pedido` (esta sesión).
+- Riesgos: ninguno.
+- Siguiente paso: ninguno; las cuatro funcionalidades pasan.
