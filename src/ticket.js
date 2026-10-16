@@ -1,4 +1,6 @@
 // Formateo de importes para el ticket.
+import { totalConEnvio, totalConCupon } from './carrito.js';
+import { gastosEnvio } from './envio.js';
 
 /**
  * Formatea un importe en euros con dos decimales, coma decimal y el símbolo €.
@@ -18,4 +20,20 @@ export function formatearEuros(importe) {
  */
 export function lineaTicket({ nombre, precio, cantidad }) {
   return `${cantidad} x ${nombre}  ${formatearEuros(precio)} = ${formatearEuros(precio * cantidad)}`;
+}
+
+/**
+ * Devuelve el ticket completo de un pedido: una línea por producto, una de
+ * envío y una de total. El envío y el total se calculan reutilizando
+ * gastosEnvio y totalConEnvio (umbral y IVA incluidos).
+ */
+export function ticket(lineas, cupon) {
+  const productos = lineas.map(lineaTicket);
+  const envio = gastosEnvio(totalConCupon(lineas, cupon));
+  const total = totalConEnvio(lineas, cupon);
+  return [
+    ...productos,
+    `Envío  ${formatearEuros(envio)}`,
+    `Total  ${formatearEuros(total)}`,
+  ].join('\n');
 }

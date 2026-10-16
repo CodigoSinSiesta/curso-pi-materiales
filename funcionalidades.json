@@ -67,15 +67,28 @@
       "area": "ticket",
       "titulo": "Ticket completo",
       "comportamiento": "ticket(lineas, cupon) devuelve el texto completo: una línea por producto, una línea de envío y una de total, con totalConEnvio y gastosEnvio.",
-      "estado": "sin_empezar",
+      "estado": "pasa",
       "rubrica": "rubricas/ticket-003.md",
       "verificacion": [
         "./verificar.sh ticket-003",
         "Criterios en rubricas/ticket-003.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
         "Un carrito por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "./verificar.sh ticket-003",
+          "resultado": "exit 0 (A1–A5 en verde)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "24 pass / 0 fail (incluye las 3 nuevas de ticket)"
+        },
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "9 pass / 0 fail"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. ticket reutiliza lineaTicket, gastosEnvio(totalConCupon(lineas, cupon)) y totalConEnvio(lineas, cupon); el texto es una línea por producto, «Envío  <importe>» y «Total  <importe>»."
     }
   ]
 }
