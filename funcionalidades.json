@@ -1,6 +1,6 @@
 {
   "proyecto": "tienda",
-  "actualizado": "2026-10-16",
+  "actualizado": "2026-10-17",
   "reglas": {
     "una_sola_en_curso": true,
     "pasa_requiere_evidencia": true,
@@ -96,15 +96,28 @@
       "area": "pedido",
       "titulo": "Desglose del pedido",
       "comportamiento": "desglose(lineas, cupon, tipoIVA = 21), en un fichero nuevo src/desglose.js, devuelve { base, iva, envio, total } en euros redondeados a céntimos: base es el total con cupón sin IVA (totalConCupon), iva es aplicarIVA(base, tipoIVA) − base, envio es gastosEnvio(base) y total es totalConEnvio(lineas, cupon, tipoIVA); base + iva + envio es igual a total.",
-      "estado": "sin_empezar",
+      "estado": "pasa",
       "rubrica": "rubricas/ticket-004.md",
       "verificacion": [
         "./verificar.sh ticket-004",
         "Criterios en rubricas/ticket-004.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
         "Un pedido por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "./verificar.sh ticket-004",
+          "resultado": "exit 0 (A1–A5 en verde; la aceptación de ticket-004 pasa 4/4)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "36 pass / 0 fail (incluye las 12 nuevas de desglose)"
+        },
+        {
+          "comando": "node --test test/desglose.test.js",
+          "resultado": "12 pass / 0 fail"
+        }
+      ],
+      "notas": "Implementado en src/desglose.js. desglose reutiliza totalConCupon, aplicarIVA, gastosEnvio y totalConEnvio; iva se redondea a céntimos como Math.round((aplicarIVA(base, tipoIVA) − base) * 100) / 100, así base + iva + envio cuadra con total. Las pruebas llevan los importes escritos a mano a ambos lados del umbral (40 €) y con y sin cupón."
     }
   ]
 }

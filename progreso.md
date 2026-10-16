@@ -8,7 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; `ticket-004` en `sin_empezar`, el resto en `pasa`.
+- Funcionalidad en curso: ninguna; `ticket-004` en `pasa` y el resto también en `pasa`.
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
@@ -52,4 +52,22 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
   `{ Silla 45×1 }` → `Total  54,45 €` (envío 0,00 €).
 - Commits: `tienda: añade ticket completo al ticket` (esta sesión).
 - Riesgos: ninguno.
+- Siguiente paso: ninguno (todas las funcionalidades en `pasa`).
+
+### 2026-10-17 · omp · ticket-004 (Desglose del pedido)
+
+- Objetivo: implementar `desglose(lineas, cupon, tipoIVA = 21)` en `src/desglose.js` y sus pruebas en
+  `test/desglose.test.js`.
+- Completado: función que devuelve `{ base, iva, envio, total }` en euros redondeados a céntimos, reutilizando
+  `totalConCupon` (base), `aplicarIVA(base, tipoIVA) − base` (iva, redondeado a céntimos), `gastosEnvio(base)`
+  (envio) y `totalConEnvio(lineas, cupon, tipoIVA)` (total). Pruebas añadidas: 6 pedidos con importes escritos a
+  mano (sin cupón y con el 10 %, por debajo, justo en y por encima del umbral de 40 €, y un tipo de IVA del 10 %)
+  más la invariante base + iva + envio = total en cada uno.
+- Verificación ejecutada: `./verificar.sh ticket-004` → exit 0 (A1–A5 en verde; aceptación 4 pass / 0 fail);
+  `node --test test/desglose.test.js` → 12 pass / 0 fail; `npm test` → 36 pass / 0 fail.
+- Evidencia: `{ Mochila 30×1, Libreta 4×3 }` con cupón 10 % → `{ base: 37.8, iva: 7.94, envio: 4.95,
+  total: 50.69 }`; `{ Silla 45×1 }` sin cupón → `{ base: 45, iva: 9.45, envio: 0, total: 54.45 }`; con cupón
+  10 % (40,50 €) → `{ base: 40.5, iva: 8.51, envio: 0, total: 49.01 }`.
+- Commits: `tienda: añade el desglose del pedido` (esta sesión).
+- Riesgos: ninguno. `src/carrito.js`, `src/envio.js` y `src/ticket.js` no se han tocado (contrato de la rúbrica).
 - Siguiente paso: ninguno (todas las funcionalidades en `pasa`).
