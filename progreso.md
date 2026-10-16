@@ -8,7 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `andamiaje`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; siguiente `ticket-003` (Ticket completo)
+- Funcionalidad en curso: ninguna; `ticket-001`, `ticket-002` y `ticket-003` en `pasa`
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
@@ -40,3 +40,20 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Commits: `tienda: añade lineaTicket al ticket`; `tienda: añade pruebas de lineaTicket al ticket` (esta sesión).
 - Riesgos: ninguno.
 - Siguiente paso: `ticket-003` (Ticket completo).
+
+### 2026-10-16 · Pi · ticket-003 (Ticket completo)
+
+- Objetivo: marcar `ticket-003` como `pasa` con la evidencia de `npm test`.
+- Hallazgo: `npm test` pasaba (24/24), pero la aceptación `aceptacion/ticket-003.mjs` fallaba. `ticket()` calculaba
+  los gastos de envío sobre `subtotal(lineas)` en lugar de sobre el total con cupón sin IVA, así que un cupón que
+  cruzaba el umbral de 40 € descontaba el envío indebidamente. `npm test` no lo detectaba porque ninguna prueba
+  unitaria cubría ese caso.
+- Completado: `ticket()` usa `gastosEnvio(totalConCupon(lineas, cupon))` y `totalConEnvio(lineas, cupon)`; se añadió
+  una prueba de regresión (subtotal 42 €, cupón 10 % → 37,80 € con envío). No se tocó la verificación.
+- Verificación ejecutada: `node --test test/ticket.test.js` → 10 pass / 0 fail; `npm test` → 25 pass / 0 fail;
+  `node --test aceptacion/ticket-003.mjs` → 1 pass / 0 fail.
+- Evidencia: el ticket del caso de aceptación termina en `Total: 50,69 €`, igual a `totalConEnvio(lineas, cupon)`.
+- Commits: `tienda: corrige el cálculo del envío en el ticket`; `tienda: añade prueba de regresión del envío con cupón`;
+  `tienda: marca ticket-003 como pasa` (esta sesión).
+- Riesgos: ninguno.
+- Siguiente paso: ninguna funcionalidad pendiente.

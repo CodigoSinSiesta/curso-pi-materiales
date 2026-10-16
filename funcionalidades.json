@@ -67,13 +67,26 @@
       "area": "ticket",
       "titulo": "Ticket completo",
       "comportamiento": "ticket(lineas, cupon) devuelve el texto completo: una línea por producto, una línea de envío y una de total, con totalConEnvio y gastosEnvio.",
-      "estado": "en_curso",
+      "estado": "pasa",
       "verificacion": [
         "node --test test/ticket.test.js",
         "Un carrito por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "10 pass / 0 fail (incluye la regresión del envío sobre el total con cupón)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "25 pass / 0 fail"
+        },
+        {
+          "comando": "node --test aceptacion/ticket-003.mjs",
+          "resultado": "1 pass / 0 fail"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. ticket(lineas, cupon) usa gastosEnvio(totalConCupon(lineas, cupon)) y totalConEnvio(lineas, cupon): el envío y su umbral se calculan sobre el total con cupón y sin IVA, y el IVA solo va a los productos. El primer intento calculaba el envío sobre subtotal(lineas), lo que con un cupón que cruza el umbral daba un total incorrecto; lo detectó la aceptación aceptacion/ticket-003.mjs y se corrigió."
     }
   ]
 }
