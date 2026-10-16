@@ -67,7 +67,7 @@
       "area": "ticket",
       "titulo": "Ticket completo",
       "comportamiento": "ticket(lineas, cupon) devuelve el texto completo: una línea por producto, una línea de envío y una de total, con totalConEnvio y gastosEnvio.",
-      "estado": "sin_empezar",
+      "estado": "en_curso",
       "verificacion": [
         "node --test test/ticket.test.js",
         "Un carrito por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."

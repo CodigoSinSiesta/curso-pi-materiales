@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatearEuros, lineaTicket } from '../src/ticket.js';
+import { formatearEuros, lineaTicket, ticket } from '../src/ticket.js';
 
 test('formatearEuros usa dos decimales, coma y el símbolo del euro', () => {
   assert.equal(formatearEuros(4.95), '4,95 €');
@@ -39,5 +39,29 @@ test('lineaTicket redondea el importe a céntimos', () => {
   assert.equal(
     lineaTicket({ nombre: 'Bolígrafo', precio: 0.1, cantidad: 3 }),
     '3 x Bolígrafo  0,10 € = 0,30 €'
+  );
+});
+
+test('ticket por debajo de 40 € cobra el envío', () => {
+  // 20 € → envío 4,95 €; 20 × 1,21 = 24,20 + 4,95 = 29,15
+  assert.equal(
+    ticket([{ nombre: 'Taza', precio: 10, cantidad: 2 }]),
+    '2 x Taza  10,00 € = 20,00 €\nEnvío: 4,95 €\nTotal: 29,15 €'
+  );
+});
+
+test('ticket por debajo de 40 € con cupón', () => {
+  // 20 € - 10 % = 18; 18 × 1,21 = 21,78 + 4,95 = 26,73
+  assert.equal(
+    ticket([{ nombre: 'Taza', precio: 10, cantidad: 2 }], { porcentaje: 10 }),
+    '2 x Taza  10,00 € = 20,00 €\nEnvío: 4,95 €\nTotal: 26,73 €'
+  );
+});
+
+test('ticket por encima de 40 € con cupón: envío gratis', () => {
+  // 60 € - 10 % = 54; 54 × 1,21 = 65,34; envío 0
+  assert.equal(
+    ticket([{ nombre: 'Lámpara', precio: 60, cantidad: 1 }], { porcentaje: 10 }),
+    '1 x Lámpara  60,00 € = 60,00 €\nEnvío: 0,00 €\nTotal: 65,34 €'
   );
 });
