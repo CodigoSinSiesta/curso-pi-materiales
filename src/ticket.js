@@ -1,5 +1,5 @@
 // Formateo de importes para el ticket.
-import { subtotal, totalConCupon, aplicarIVA } from './carrito.js';
+import { totalConCupon, totalConEnvio } from './carrito.js';
 import { gastosEnvio } from './envio.js';
 
 /**
@@ -26,8 +26,8 @@ export function lineaTicket({ nombre, precio, cantidad }) {
  * Devuelve el ticket completo: una línea por producto, la del envío y la del total.
  */
 export function ticket(lineas, cupon) {
-  const envio = gastosEnvio(subtotal(lineas));
-  const total = aplicarIVA(totalConCupon(lineas, cupon)) + envio;
+  const envio = gastosEnvio(totalConCupon(lineas, cupon));
+  const total = totalConEnvio(lineas, cupon);
   return [
     ...lineas.map(lineaTicket),
     `Envío: ${formatearEuros(envio)}`,
