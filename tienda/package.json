@@ -1,0 +1,7 @@
+{
+  "name": "tienda",
+  "version": "1.0.0",
+  "description": "Repositorio de juguete para las demos del curso de Pi y oh my pi",
+  "type": "module",
+  "scripts": { "test": "node --test" }
+}

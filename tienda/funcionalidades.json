@@ -1,0 +1,139 @@
+{
+  "proyecto": "tienda",
+  "actualizado": "2026-10-17",
+  "reglas": {
+    "una_sola_en_curso": true,
+    "pasa_requiere_evidencia": true,
+    "no_cambiar_la_verificacion": true
+  },
+  "leyenda_estados": {
+    "sin_empezar": "Nadie ha empezado.",
+    "en_curso": "Es la tarea activa.",
+    "bloqueada": "No puede avanzar hasta resolver un bloqueo anotado en notas.",
+    "pasa": "La verificación se ha ejecutado, pasa y la evidencia está anotada."
+  },
+  "funcionalidades": [
+    {
+      "id": "ticket-001",
+      "prioridad": 1,
+      "area": "ticket",
+      "titulo": "Formatear euros",
+      "comportamiento": "formatearEuros(importe), en src/ticket.js, devuelve el importe con dos decimales, coma decimal y el símbolo del euro.",
+      "estado": "pasa",
+      "verificacion": [
+        "node --test test/ticket.test.js",
+        "4.95 → \"4,95 €\"; 10 → \"10,00 €\"; 0 → \"0,00 €\"; 1234.5 → \"1234,50 €\"",
+        "Lanza TypeError si el importe no es un número finito mayor o igual que 0."
+      ],
+      "evidencias": [
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "3 pass / 0 fail"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "18 pass / 0 fail (incluye las 3 nuevas de formatearEuros)"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. Redondeo a céntimos con Math.round(importe * 100) / 100 antes de toFixed(2)."
+    },
+    {
+      "id": "ticket-002",
+      "prioridad": 2,
+      "area": "ticket",
+      "titulo": "Línea de ticket",
+      "comportamiento": "lineaTicket(linea), con linea = { nombre, precio, cantidad }, devuelve \"<cantidad> x <nombre>  <precio> = <importe>\" con los importes formateados con formatearEuros.",
+      "estado": "pasa",
+      "verificacion": [
+        "node --test test/ticket.test.js",
+        "{ nombre: 'Taza', precio: 4.5, cantidad: 2 } → \"2 x Taza  4,50 € = 9,00 €\"",
+        "Con una sola unidad y con varias; el importe se redondea a céntimos."
+      ],
+      "evidencias": [
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "6 pass / 0 fail"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "21 pass / 0 fail (incluye las 3 nuevas de lineaTicket)"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. lineaTicket usa formatearEuros para precio e importe (precio * cantidad), así el redondeo a céntimos es el del formateador."
+    },
+    {
+      "id": "ticket-003",
+      "prioridad": 3,
+      "area": "ticket",
+      "titulo": "Ticket completo",
+      "comportamiento": "ticket(lineas, cupon) devuelve el texto completo: una línea por producto, una línea de envío y una de total, con totalConEnvio y gastosEnvio.",
+      "estado": "pasa",
+      "rubrica": "rubricas/ticket-003.md",
+      "verificacion": [
+        "./verificar.sh ticket-003",
+        "Criterios en rubricas/ticket-003.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
+        "Un carrito por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
+      ],
+      "evidencias": [
+        {
+          "comando": "./verificar.sh ticket-003",
+          "resultado": "exit 0 (A1–A5 en verde)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "24 pass / 0 fail (incluye las 3 nuevas de ticket)"
+        },
+        {
+          "comando": "node --test test/ticket.test.js",
+          "resultado": "9 pass / 0 fail"
+        }
+      ],
+      "notas": "Implementado en src/ticket.js. ticket reutiliza lineaTicket, gastosEnvio(totalConCupon(lineas, cupon)) y totalConEnvio(lineas, cupon); el texto es una línea por producto, «Envío  <importe>» y «Total  <importe>»."
+    },
+    {
+      "id": "ticket-004",
+      "prioridad": 4,
+      "area": "pedido",
+      "titulo": "Desglose del pedido",
+      "comportamiento": "desglose(lineas, cupon, tipoIVA = 21), en un fichero nuevo src/desglose.js, devuelve { base, iva, envio, total } en euros redondeados a céntimos: base es el total con cupón sin IVA (totalConCupon), iva es aplicarIVA(base, tipoIVA) − base, envio es gastosEnvio(base) y total es totalConEnvio(lineas, cupon, tipoIVA); base + iva + envio es igual a total.",
+      "estado": "pasa",
+      "rubrica": "rubricas/ticket-004.md",
+      "verificacion": [
+        "./verificar.sh ticket-004",
+        "Criterios en rubricas/ticket-004.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
+        "Un pedido por debajo de 40 € (con envío) y otro por encima (envío 0,00 €), con y sin cupón."
+      ],
+      "evidencias": [
+        {
+          "comando": "./verificar.sh ticket-004",
+          "resultado": "exit 0 (A1–A5 en verde; la aceptación de ticket-004 pasa 4/4)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "36 pass / 0 fail (incluye las 12 nuevas de desglose)"
+        },
+        {
+          "comando": "node --test test/desglose.test.js",
+          "resultado": "12 pass / 0 fail"
+        }
+      ],
+      "notas": "Implementado en src/desglose.js. desglose reutiliza totalConCupon, aplicarIVA, gastosEnvio y totalConEnvio; iva se redondea a céntimos como Math.round((aplicarIVA(base, tipoIVA) − base) * 100) / 100, así base + iva + envio cuadra con total. Las pruebas llevan los importes escritos a mano a ambos lados del umbral (40 €) y con y sin cupón."
+    },
+    {
+      "id": "ticket-005",
+      "prioridad": 5,
+      "area": "pedido",
+      "titulo": "Cupón de importe fijo",
+      "comportamiento": "totalConCupon(lineas, cupon), en src/carrito.js, acepta también un cupón { importe } en euros: resta ese importe una sola vez al subtotal (no a cada línea), antes del IVA y del envío, y el resultado nunca baja de 0. Un importe que no sea un número finito mayor que 0 lanza TypeError. El cupón { porcentaje } no cambia. totalConEnvio, desglose y ticket lo usan sin cambios.",
+      "estado": "sin_empezar",
+      "rubrica": "rubricas/ticket-005.md",
+      "verificacion": [
+        "./verificar.sh ticket-005",
+        "Criterios en rubricas/ticket-005.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
+        "Un pedido de varias líneas por debajo de 40 € con el cupón (con envío) y otro que queda justo en 40 € (envío 0,00 €)."
+      ],
+      "evidencias": [],
+      "notas": ""
+    }
+  ]
+}
