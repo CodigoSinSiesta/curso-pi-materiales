@@ -55,4 +55,4 @@ Cada demo parte de un estado concreto de la tienda. Tras `preparar.sh`, están c
 
 ## Créditos
 
-La estructura de la tienda y varias ideas de los vídeos 22 a 25 vienen de [Learn Harness Engineering](https://github.com/walkinglabs/learn-harness-engineering) (MIT · © 2025 WalkingLab); la licencia está en `tienda/LICENSE-learn-harness-engineering`.
+El código de este repositorio se publica con licencia MIT (`LICENSE`). La estructura de la tienda y varias ideas de los vídeos 22 a 25 vienen de [Learn Harness Engineering](https://github.com/walkinglabs/learn-harness-engineering) (MIT · © 2025 WalkingLab); la licencia está en `tienda/LICENSE-learn-harness-engineering`.
