@@ -1,0 +1,3 @@
+# Notas
+
+- Pendiente: añadir pruebas.

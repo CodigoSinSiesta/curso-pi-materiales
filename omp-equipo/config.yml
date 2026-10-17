@@ -1,0 +1,23 @@
+tools:
+  approvalMode: write
+  approval:
+    bash: prompt
+    eval: prompt
+bash:
+  patterns:
+    - match: "git push*"
+      approval: deny
+    - match: "git status"
+      approval: allow
+    - match: "git diff*"
+      approval: allow
+    - match: "git log*"
+      approval: allow
+    - match: "git show*"
+      approval: allow
+    - match: "npm test"
+      approval: allow
+    - match: "node --test*"
+      approval: allow
+secrets:
+  enabled: true

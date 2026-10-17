@@ -1,0 +1,13 @@
+{
+  "name": "sdk-omp",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@oh-my-pi/pi-coding-agent": "18.11.1"
+  }
+}
