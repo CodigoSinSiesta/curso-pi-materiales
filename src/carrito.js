@@ -20,10 +20,17 @@ export function contarUnidades(lineas) {
 }
 
 /**
- * Aplica un cupón porcentual al subtotal y redondea a céntimos.
+ * Aplica un cupón al subtotal y redondea a céntimos.
  * Un cupón { porcentaje: 10 } descuenta el 10 % una sola vez sobre el subtotal.
+ * Un cupón { importe: 5 } resta 5 € una sola vez al subtotal, sin bajar de 0.
  */
 export function totalConCupon(lineas, cupon) {
+  if (cupon && cupon.importe !== undefined) {
+    if (typeof cupon.importe !== 'number' || !Number.isFinite(cupon.importe) || cupon.importe <= 0) {
+      throw new TypeError('El importe del cupón debe ser un número finito mayor que 0');
+    }
+    return Math.round(Math.max(0, subtotal(lineas) - cupon.importe) * 100) / 100;
+  }
   let total = 0;
   for (const l of lineas) {
     const linea = l.precio * l.cantidad;

@@ -125,15 +125,28 @@
       "area": "pedido",
       "titulo": "Cupón de importe fijo",
       "comportamiento": "totalConCupon(lineas, cupon), en src/carrito.js, acepta también un cupón { importe } en euros: resta ese importe una sola vez al subtotal (no a cada línea), antes del IVA y del envío, y el resultado nunca baja de 0. Un importe que no sea un número finito mayor que 0 lanza TypeError. El cupón { porcentaje } no cambia. totalConEnvio, desglose y ticket lo usan sin cambios.",
-      "estado": "sin_empezar",
+      "estado": "pasa",
       "rubrica": "rubricas/ticket-005.md",
       "verificacion": [
         "./verificar.sh ticket-005",
         "Criterios en rubricas/ticket-005.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
         "Un pedido de varias líneas por debajo de 40 € con el cupón (con envío) y otro que queda justo en 40 € (envío 0,00 €)."
       ],
-      "evidencias": [],
-      "notas": ""
+      "evidencias": [
+        {
+          "comando": "./verificar.sh ticket-005",
+          "resultado": "exit 0 (A1–A5 en verde; aceptación 5 pass / 0 fail)"
+        },
+        {
+          "comando": "npm test",
+          "resultado": "41 pass / 0 fail (incluye los 5 nuevos de cupón de importe fijo)"
+        },
+        {
+          "comando": "node --test test/carrito.test.js",
+          "resultado": "17 pass / 0 fail"
+        }
+      ],
+      "notas": "Implementado en src/carrito.js. totalConCupon acepta { importe } (euros): valida que sea un número finito mayor que 0 (TypeError si no), lo resta una sola vez al subtotal con Math.max(0, subtotal − importe) y redondea a céntimos; el cupón { porcentaje } no cambia. totalConEnvio, desglose y ticket lo usan sin cambios."
     }
   ]
 }

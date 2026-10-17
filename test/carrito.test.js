@@ -63,3 +63,33 @@ test('aplicarIVA redondea a céntimos', () => {
   assert.equal(aplicarIVA(29.99), 36.29); // 29.99 × 1.21 = 36.2879
   assert.equal(aplicarIVA(0.1), 0.12); // 0.1 × 1.21 = 0.121 → 0.12
 });
+
+test('un cupón de importe fijo se resta una sola vez al subtotal', () => {
+  // 30 + 4 × 3 = 42; 42 − 5 = 37 (no 5 por cada línea)
+  const dosLineas = [
+    { nombre: 'Mochila', precio: 30, cantidad: 1 },
+    { nombre: 'Libreta', precio: 4, cantidad: 3 },
+  ];
+  assert.equal(totalConCupon(dosLineas, { importe: 5 }), 37);
+});
+
+test('totalConEnvio resta el importe fijo antes del IVA y del envío', () => {
+  // 29 − 5 = 24; 24 × 1.21 = 29.04; 24 < 40 → envío 4.95 → 33.99
+  assert.equal(totalConEnvio(lineas, { importe: 5 }), 33.99);
+});
+
+test('un cupón de importe fijo que deja el total en el umbral no paga envío', () => {
+  // 45 − 5 = 40 ≥ 40 → envío 0; 40 × 1.21 = 48.4
+  assert.equal(totalConEnvio([{ precio: 45, cantidad: 1 }], { importe: 5 }), 48.4);
+});
+
+test('un cupón mayor que el pedido deja el total en 0', () => {
+  // 42 − 50 = −8 → 0
+  assert.equal(totalConCupon([{ precio: 42, cantidad: 1 }], { importe: 50 }), 0);
+});
+
+test('un importe de cupón no válido lanza TypeError', () => {
+  for (const importe of [0, -5, NaN, Infinity, '5', null, {}]) {
+    assert.throws(() => totalConCupon(lineas, { importe }), TypeError, `importe: ${String(importe)}`);
+  }
+});

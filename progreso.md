@@ -8,7 +8,7 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
 - Raíz del repositorio: `~/csn/tienda`, rama `final`
 - Arranque estándar: `./init.sh`
 - Verificación estándar: `npm test`
-- Funcionalidad en curso: ninguna; `ticket-005` sin empezar y el resto en `pasa`.
+- Funcionalidad en curso: ninguna; todas en `pasa`.
 - Bloqueo actual: ninguno
 
 ## Registro de sesiones
@@ -70,4 +70,23 @@ pide `AGENTS.md`; ningún agente lo actualiza solo.
   10 % (40,50 €) → `{ base: 40.5, iva: 8.51, envio: 0, total: 49.01 }`.
 - Commits: `tienda: añade el desglose del pedido` (esta sesión).
 - Riesgos: ninguno. `src/carrito.js`, `src/envio.js` y `src/ticket.js` no se han tocado (contrato de la rúbrica).
+- Siguiente paso: ninguno (todas las funcionalidades en `pasa`).
+
+### 2026-10-17 · Pi · ticket-005 (Cupón de importe fijo)
+
+- Objetivo: hacer que `totalConCupon(lineas, cupon)` acepte un cupón `{ importe }` en euros, en `src/carrito.js`, y
+  añadir sus pruebas en `test/carrito.test.js`.
+- Completado: salida temprana en `totalConCupon` para el cupón `{ importe }`: valida que sea un número finito mayor
+  que 0 (`TypeError` si no), lo resta una sola vez al subtotal reutilizando `subtotal(lineas)` con
+  `Math.max(0, …)` y redondea a céntimos con el patrón de la tienda. El bucle del cupón `{ porcentaje }` queda
+  intacto. Pruebas añadidas: varias líneas (37 €), envío tras el cupón (33,99 €), umbral de 40 € (48,40 €), cupón
+  mayor que el pedido (0 €) e importes no válidos (`0`, `-5`, `NaN`, `Infinity`, `'5'`, `null`, `{}` → `TypeError`).
+- Verificación ejecutada: `./verificar.sh ticket-005` → exit 0 (A1–A5 en verde; aceptación 5 pass / 0 fail);
+  `node --test test/carrito.test.js` → 17 pass / 0 fail; `npm test` → 41 pass / 0 fail.
+- Evidencia: `totalConCupon([{ precio: 30, cantidad: 1 }, { precio: 4, cantidad: 3 }], { importe: 5 })` → `37`;
+  `totalConCupon([{ precio: 42, cantidad: 1 }], { importe: 50 })` → `0`;
+  `totalConCupon([{ precio: 42, cantidad: 1 }], { importe: -5 })` → `TypeError`.
+- Commits: `tienda: añade el cupón de importe fijo al carrito` (esta sesión).
+- Riesgos: ninguno. Solo se han tocado `src/carrito.js` y `test/carrito.test.js` (contrato de la rúbrica);
+  `src/envio.js`, `src/ticket.js` y `src/desglose.js` no cambian.
 - Siguiente paso: ninguno (todas las funcionalidades en `pasa`).
