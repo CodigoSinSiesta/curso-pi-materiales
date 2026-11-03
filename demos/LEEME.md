@@ -22,7 +22,7 @@ cd ~/csn && ./comprobar.sh 08         # ¿quedó bien?
 - **Si `demo-NN` ya tiene commits tuyos,** se niega y te enseña cuáles. Con `./preparar.sh NN --de-nuevo` la guarda como `demo-NN-anterior-<fecha>` y empieza de cero.
 - **Dos vídeos tienen dos partes:** `./preparar.sh 23 omp` (la sesión de oh my pi, desde donde la dejó Pi en la grabación) y `./preparar.sh 24 omp` (la parte de oh my pi parte de otro commit).
 - **El vídeo 20 empieza con un cambio sin commitear** (envío gratis desde 50 €), como en la grabación. Por eso, al volver a ejecutar `./preparar.sh` después, te pedirá guardarlo o descartarlo.
-- **Crea las etiquetas `rubrica-*`** que necesita `./verificar.sh` en los vídeos 24 a 26 (y `medir/orquestar.sh` en el 25). No viajan con las ramas, así que sin ellas `verificar.sh` sale siempre con 1. Las crea también `./preparar.sh` sin argumentos, y no toca las que ya existan.
+- **Crea las etiquetas `rubrica-*`** que necesita `./verificar.sh` en los vídeos 24 a 26 (y `medir/orquestar.sh` en el 25). Están publicadas en el repositorio, pero un clon anterior al 3 de noviembre de 2026 no las trae, y sin ellas `verificar.sh` sale siempre con 1. Las crea también `./preparar.sh` sin argumentos, y no toca las que ya existan.
 - **Te dice qué falta fuera de la tienda** (ficheros que no están en los materiales, variables como `TOKEN_DEMO`, extensiones que cargar) y cómo arrancar.
 
 `extensiones/` se queda en su punta: sus `hola.ts`, `tests.ts`, `permisos.ts` y `puerta.ts` sirven para todas las demos. Las versiones intermedias de los vídeos 08 y 09 se ven con `git -C ~/csn/extensiones log` y `git show`.
