@@ -1,0 +1,77 @@
+# Cada semana instala la última versión de Pi y de oh my pi y comprueba, sin modelo ni clave de API, que los
+# comandos del curso siguen funcionando: que arrancan, que existen las herramientas que nombran los scripts,
+# que las extensiones cargan y que la API de los ejemplos de SDK y RPC sigue ahí.
+# Si algo falla, cada error empieza por «Se ha roto:» y dice qué comando del curso y de qué vídeo.
+# Los vídeos se grabaron con Pi 1.0–1.3 y oh my pi 18.5–18.11: un fallo aquí no invalida los vídeos,
+# pero avisa de que un alumno con la versión nueva se va a encontrar algo distinto.
+name: Pi y oh my pi al día
+
+on:
+  schedule:
+    - cron: "17 6 * * 1" # los lunes a las 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pi:
+    name: Pi (última versión)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Instalar Pi
+        run: npm install -g --ignore-scripts @earendil-works/pi-coding-agent@latest
+      - name: Versión
+        run: echo "Pi $(pi --version)" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Comprobar los comandos del curso
+        run: bash .github/scripts/pi-sin-modelo.sh
+
+  omp:
+    name: oh my pi (última versión)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4 # los scripts de comprobación usan Node
+        with:
+          node-version: 22
+      - name: Instalar oh my pi (el binario del instalador oficial)
+        run: |
+          curl -fsSL https://omp.sh/install | sh -s -- --binary
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Versión
+        run: echo "oh my pi $(omp --version)" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Comprobar los comandos del curso
+        run: bash .github/scripts/omp-sin-modelo.sh
+
+  omp-sdk:
+    name: SDK de oh my pi (sdk-omp/)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: sdk-omp con la última versión del paquete
+        run: |
+          cp -R sdk-omp "$RUNNER_TEMP/sdk-omp"
+          cd "$RUNNER_TEMP/sdk-omp"
+          bun add @oh-my-pi/pi-coding-agent@latest
+          echo "@oh-my-pi/pi-coding-agent $(jq -r .version node_modules/@oh-my-pi/pi-coding-agent/package.json)" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Comprobar sdk-omp/resumen.ts sin modelo
+        run: |
+          export HOME="$RUNNER_TEMP/casa" && mkdir -p "$HOME"
+          bun .github/scripts/omp-sdk.ts "$RUNNER_TEMP/sdk-omp" "$PWD" | tee "$RUNNER_TEMP/sdk.txt"
+          fallo=0
+          while IFS=$'\t' read -r _ comando video detalle; do
+            echo "::error title=Se ha roto%3A $comando::Vídeo $video. $detalle"
+            echo "- **Se ha roto: \`$comando\`** (vídeo $video). $detalle" >> "$GITHUB_STEP_SUMMARY"
+            fallo=1
+          done < <(grep $'^ROTO\t' "$RUNNER_TEMP/sdk.txt")
+          exit $fallo
