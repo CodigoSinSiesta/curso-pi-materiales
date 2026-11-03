@@ -1,0 +1,24 @@
+{
+  "id": "revision-borde-cupon",
+  "pregunta": "¿funciona como lo diseñamos?",
+  "sintoma": "La revisión aprueba el cupón de importe fijo sin señalar que { importe: undefined } no lanza TypeError: cae en el cupón de porcentaje y devuelve NaN.",
+  "origen": {
+    "sesion": "01a14901-f0ea-72b1-af69-664b8052af41",
+    "lanzada_desde": "01a14901-451e-7596-a32c-60bab7337143",
+    "fecha": "2026-10-17",
+    "modelo": "deepseek/deepseek-v4-pro",
+    "harness": "omp",
+    "como": "subagente reviewer lanzado por /review (vídeo 26)"
+  },
+  "partida": "ticket-005",
+  "diff_contra": "final",
+  "harness": "omp",
+  "modelo": "deepseek/deepseek-v4-pro",
+  "opciones": ["--tools", "read,grep,glob,bash", "--thinking", "high"],
+  "orden": "casos/revision-borde-cupon.orden.md",
+  "tope": {"segundos": 600, "dolares": 0.1},
+  "comprobaciones": ["arbol-limpio", "sin-error", "tope-coste", "afirmacion"],
+  "afirmacion": "El texto señala, como defecto o como riesgo, que un cupón con la propiedad importe presente pero sin valor ({ importe: undefined }) no lanza TypeError y acaba en otro camino (el del porcentaje, NaN o un resultado que no es un número).",
+  "diferencias": "En el 26 lo revisó un subagente con el prompt de reviewer; aquí, la sesión principal con el mismo encargo y sus herramientas de trabajo (read, grep, glob y bash; sin task, wait ni web_search).",
+  "arreglado_en": null
+}

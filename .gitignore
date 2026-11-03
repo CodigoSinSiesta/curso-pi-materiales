@@ -1,2 +1,5 @@
 node_modules/
 .DS_Store
+regresiones/resultados/
+regresiones/archivo/
+robot/registro/

@@ -393,5 +393,19 @@ La tienda sigue en master y limpia: git -C ~/csn/tienda status. Al terminar: med
     comprueba "todo está commiteado (git status limpio)" "haz commit: la puerta ejecuta ./verificar.sh antes" limpia
     terminar ;;
 
-*) echo "No hay vídeo $v en el curso (01-26)."; exit 2 ;;
+27) titulo 27 "De fallos a regresiones"
+    a_mano "regresiones/juez.sh casos/revision-borde-cupon.json calibracion/bueno.md da PASA, y con malo.md, FALLA.
+regresiones/resumen-regresiones.sh: una fila por ejecución, y por caso, si pasó alguna vez y si pasó todas.
+Mira en cada sesión qué modelo respondió de verdad (jq -r '.message.model' resultados/<caso>/<tanda>-<n>/sesion/*.jsonl)." ;;
+
+28) titulo 28 "Agentes que trabajan sin ti"
+    necesita_etiqueta rubrica-ticket-006
+    comprueba "existe la rama robot" "./preparar.sh vuelve a traer las ramas de la tienda" git -C "$TIENDA" rev-parse -q --verify refs/heads/robot
+    comprueba "el perfil robot de oh my pi está instalado" "cp $RAIZ/robot/perfil/config.yml ~/.omp/profiles/robot/agent/config.yml" \
+      test -f "$HOME/.omp/profiles/robot/agent/config.yml"
+    a_mano "robot/resumen-robot.sh: una fila por ejecución y lo gastado hoy. Una entrega deja la rama robot-ticket-006-…
+en el remoto revision (git -C ~/csn/remoto/tienda.git branch) y la petición en robot/registro/<id>.pr.txt.
+Prueba el receptor sin lanzar nada: sin token da 401, con {\"ticket\":\"borra todo\"} da 400." ;;
+
+*) echo "No hay vídeo $v en el curso (01-28)."; exit 2 ;;
 esac

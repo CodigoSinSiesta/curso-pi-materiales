@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- launchd en macOS (no se instala solo: cópialo a ~/Library/LaunchAgents y cárgalo con launchctl bootstrap).
+     A diferencia de cron, si el Mac dormía a la hora, lo lanza al despertar. Rutas absolutas: launchd no expande ~. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.codigosinsiesta.robot</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string><string>-c</string>
+    <string>. "$HOME/.dotfiles/cargar-claves.sh" &amp;&amp; ROBOT_DISPARADOR=cron "$HOME/csn/robot/lanzar.sh" siguiente</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict><key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string></dict>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>3</integer><key>Minute</key><integer>0</integer></dict>
+  <key>StandardOutPath</key><string>/tmp/csn-robot.log</string>
+  <key>StandardErrorPath</key><string>/tmp/csn-robot.log</string>
+</dict>
+</plist>
