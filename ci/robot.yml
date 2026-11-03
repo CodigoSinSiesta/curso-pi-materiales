@@ -1,0 +1,63 @@
+# Perfil de oh my pi para el robot: lo que pediría permiso está decidido antes.
+# Se copia a ~/.omp/profiles/robot/agent/config.yml (sin claves: la del modelo la pone el lanzador en el entorno).
+modelRoles:
+  default: deepseek/deepseek-flash
+tools:
+  approvalMode: write              # lee y edita sin preguntar; ejecutar pide permiso, y sin interfaz es un no
+  approval:
+    eval: deny                     # eval también ejecuta, y los patrones de bash no le afectan
+  restrictedFolders:               # cualquier acción dentro pide permiso, en cualquier modo: sin interfaz, rechazada
+    - ~/csn/fuera
+    - ~/.ssh
+    - ~/.omp
+bash:
+  allowCompoundCommands: true      # «npm test && git status» pasa si pasan todos sus trozos
+  patterns:                        # lista blanca: lo que no está aquí pide permiso, y nadie lo da
+    - match: "git push*"
+      approval: deny
+    - match: "curl*"
+      approval: deny
+    - match: "wget*"
+      approval: deny
+    - match: "npm install*"
+      approval: deny
+    - match: "npx*"
+      approval: deny
+    - match: "./init.sh"
+      approval: allow
+    - match: "pwd"
+      approval: allow
+    - match: "npm test"
+      approval: allow
+    - match: "node --test*"
+      approval: allow
+    - match: "./verificar.sh*"
+      approval: allow
+    - match: "git status*"
+      approval: allow
+    - match: "git diff*"
+      approval: allow
+    - match: "git log*"
+      approval: allow
+    - match: "git show*"
+      approval: allow
+    - match: "git add*"
+      approval: allow
+    - match: "git commit*"
+      approval: allow
+secrets:
+  enabled: true
+memory:
+  backend: off
+skills:
+  enableAgentsUser: false
+  enableClaudeUser: false
+  enableCodexUser: false
+  enablePiUser: false
+commands:
+  enableClaudeUser: false
+  enableOpencodeUser: false
+archive:
+  enabled: false
+dev:
+  autoqaConsent: denied

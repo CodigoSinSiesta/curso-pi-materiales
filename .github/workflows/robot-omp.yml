@@ -1,0 +1,93 @@
+name: Robot con oh my pi
+# Un encargo desatendido en GitHub. Dos trabajos: el que ejecuta el modelo no puede escribir en el repositorio,
+# y el que escribe no ejecuta el modelo. Lo que juzga (rúbrica, aceptación, verificar.sh) sale de la etiqueta.
+on:
+  schedule:
+    - cron: "0 2 * * 1-5"            # en UTC
+  workflow_dispatch:
+    inputs:
+      ticket:
+        description: "ticket-NNN (vacío: el siguiente sin empezar)"
+        required: false
+  repository_dispatch:
+    types: [encargo]                 # otro sistema llama con su token y {"client_payload": {"ticket": "ticket-NNN"}}
+permissions:
+  contents: read
+jobs:
+  trabajar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      ticket: ${{ steps.ticket.outputs.id }}
+      juez: ${{ steps.juez.outputs.resultado }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install -g @oh-my-pi/pi-coding-agent@18.13.3   # versión fijada: se sube a mano, con la batería en verde
+      # Un identificador, nunca texto libre: el encargo sale de funcionalidades.json.
+      - name: El encargo
+        id: ticket
+        env:
+          T: ${{ inputs.ticket || github.event.client_payload.ticket }}
+        run: |
+          [ -n "$T" ] || T=$(jq -r '[.funcionalidades[] | select(.estado=="sin_empezar")] | sort_by(.prioridad) | .[0].id // ""' funcionalidades.json)
+          [[ $T =~ ^ticket-[0-9]{3}$ ]] || { echo "No es un ticket: $T"; exit 1; }
+          echo "id=$T" >> "$GITHUB_OUTPUT"
+      - name: Perfil del robot y quién firma sus commits
+        run: |
+          mkdir -p ~/.omp/profiles/robot/agent && cp ci/robot.yml ~/.omp/profiles/robot/agent/config.yml
+          git config user.name "robot" && git config user.email "robot@users.noreply.github.com"
+      # La clave solo existe en este paso, y con topes de tiempo y de coste.
+      - name: oh my pi
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          OMP_PROFILE: robot
+        run: |
+          omp -p --mode json --no-title --model deepseek/deepseek-flash --hook ci/puerta.ts \
+            --max-time 15m --max-cost 0.10 \
+            "Trabaja en ${{ steps.ticket.outputs.id }} de funcionalidades.json siguiendo AGENTS.md. Si necesitas una decisión, escríbela en traspaso.md y para." \
+            > "$RUNNER_TEMP/eventos.jsonl"
+      - name: Juez, desde la etiqueta de la rúbrica
+        id: juez
+        run: |
+          T=${{ steps.ticket.outputs.id }}
+          git checkout -q "rubrica-$T" -- rubricas aceptacion verificar.sh
+          if [ -z "$(git status --porcelain)" ] && ./verificar.sh "$T"; then r=pasa; else r=falla; fi
+          echo "resultado=$r" >> "$GITHUB_OUTPUT"
+      - name: El trabajo, como parche
+        run: git format-patch --stdout "${{ github.sha }}..HEAD" > "$RUNNER_TEMP/robot.patch"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robot
+          path: |
+            ${{ runner.temp }}/robot.patch
+            ${{ runner.temp }}/eventos.jsonl
+  entregar:
+    needs: trabajar
+    if: needs.trabajar.outputs.juez == 'pasa'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: robot
+          path: robot
+      - name: Rama y petición de cambios en borrador
+        env:
+          GH_TOKEN: ${{ github.token }}
+          T: ${{ needs.trabajar.outputs.ticket }}
+        run: |
+          rama="robot-$T-$(date +%Y%m%d-%H%M)"
+          git config user.name "robot" && git config user.email "robot@users.noreply.github.com"
+          git switch -c "$rama" && git am robot/robot.patch && git push origin "$rama"
+          gh pr create --draft --base "${{ github.ref_name }}" --head "$rama" --title "$T (robot)" \
+            --body "Hecho por el robot. verificar.sh $T en verde desde la etiqueta rubrica-$T. Revísalo antes de fusionar."
