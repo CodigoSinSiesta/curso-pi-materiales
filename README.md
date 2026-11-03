@@ -47,17 +47,19 @@ d=~/.omp/profiles/demo/agent/commands; mkdir -p "$d" && ln -sf ~/csn/demos/omp/*
 
 | Carpeta | Qué es | Vídeos |
 |---|---|---|
-| `tienda/` | El repositorio de juguete: carrito, envío y ticket, con sus tests. Lo usan casi todas las demos. | 01–26 |
-| `extensiones/` | `hola.ts` (un comando), `tests.ts` (una herramienta), `permisos.ts` (un modo de aprobación) y `puerta.ts` (solo deja terminar si `./verificar.sh` pasa). Es también un paquete de Pi (`package.json`). | 08–10, 20, 24–26 |
+| `tienda/` | El repositorio de juguete: carrito, envío y ticket, con sus tests. Lo usan casi todas las demos. | 01–28 |
+| `extensiones/` | `hola.ts` (un comando), `tests.ts` (una herramienta), `permisos.ts` (un modo de aprobación) `puerta.ts` (solo deja terminar si `./verificar.sh` pasa) y `tope.ts` (corta Pi al pasar de un coste). Es también un paquete de Pi (`package.json`). | 08–10, 20, 24–26, 28 |
 | `tienda/scripts/revisar.sh`, `tienda/ci/permisos.ts`, `tienda/.github/workflows/revision-pi.yml` | La revisión automática con Pi en CI: tests aparte, diff a Pi en modo JSON con herramientas de solo lectura. | 10 |
 | `sdk/`, `sdk-omp/` | `resumen.ts`: Pi y oh my pi usados como librería. | 10, 21 |
 | `rpc/` | `aprobador.mjs` y `aprobador-omp.mjs`: otro programa aprueba las herramientas del agente por RPC. | 10, 21 |
 | `docker/Dockerfile.pi` | Pi entero dentro de un contenedor (el de `containerization.md`, con la versión fijada). | 05 |
-| `fuera/` | Lo que queda fuera del proyecto: `secreto.txt` (un token **falso**) y las pruebas ocultas de aceptación de los tickets 004 y 005. | 05, 25, 26 |
+| `fuera/` | Lo que queda fuera del proyecto: `secreto.txt` (un token **falso**) y las pruebas ocultas de aceptación de los tickets 004, 005 y 006. | 05, 25–28 |
 | `repo-ajeno/` | Un repositorio «de otro» con una instrucción oculta inofensiva en `AGENTS.md` y una extensión que solo muestra un aviso. Sirve para practicar la confianza de proyecto. | 05 |
 | `skills/notas-de-version/` | Una skill de ejemplo. | 06, 20 |
 | `datos/` | Datos de solo lectura (`pedidos.db`, `tarifas-envio.pdf`) que las reglas protegen. | 17, 19 |
 | `omp-equipo/` | Configuración de equipo de oh my pi y `rutas-protegidas.ts`, que traslada a omp el bloque de rutas de `permisos.ts`. | 19, 20, 21 |
+| `regresiones/` | Fallos del agente convertidos en casos que se ejecutan solos: minar sesiones, casos con su juez calibrado, reproducir con otro modelo o con un arreglo, y la batería. Ver su [README](regresiones/README.md). | 27 |
+| `robot/` | Un encargo desatendido: lanzador, receptor de webhook, perfil de oh my pi, resumen de la mañana y los relojes de ejemplo. Ver su [README](robot/README.md). | 28 |
 | `medir/` | Medir el mismo trabajo con distintos harnesses: `medir.sh`, `prefijo.sh`, `orquestar.sh` y sus resúmenes. | 22, 25 |
 
 ## Las ramas de la tienda

@@ -1,0 +1,4 @@
+# Ejemplo de crontab para el robot (no se instala solo: crontab -e y copia la línea).
+# cron no carga tu perfil de shell: la clave y el PATH los pone la propia línea. De lunes a viernes, a las 3:00.
+# Antes del robot, la batería del vídeo 27: si se pone en rojo, el robot no se lanza.
+0 3 * * 1-5  PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin; . ~/.dotfiles/cargar-claves.sh && ~/csn/regresiones/regresiones.sh 1 > /dev/null && ROBOT_DISPARADOR=cron ~/csn/robot/lanzar.sh siguiente >> ~/csn/robot/registro/cron.log 2>&1

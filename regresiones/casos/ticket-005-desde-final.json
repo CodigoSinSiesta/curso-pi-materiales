@@ -1,0 +1,19 @@
+{
+  "id": "ticket-005-desde-final",
+  "pregunta": "¿funciona?",
+  "sintoma": "Banco de una tarea: implementar ticket-005 desde la rúbrica, juzgado desde fuera.",
+  "origen": {
+    "fecha": "2026-10-17",
+    "como": "la funcionalidad del proyecto final (vídeo 26)"
+  },
+  "partida": "rubrica-ticket-005",
+  "harness": "omp",
+  "modelo": "deepseek/deepseek-flash",
+  "opciones": ["--hook", "~/csn/extensiones/puerta.ts"],
+  "orden": "casos/ticket-005-desde-final.orden.md",
+  "ticket": "ticket-005",
+  "oculta": "~/csn/fuera/ticket-005-oculta.mjs",
+  "tope": {"segundos": 900, "dolares": 0.1},
+  "comprobaciones": ["sin-error", "tope-coste", "verificar", "oculta"],
+  "arreglado_en": null
+}

@@ -6,7 +6,7 @@
 #      tienda.sh <rama> <carpeta-tienda> <carpeta-fuera>
 set -uo pipefail
 
-RAMAS=(master iva-antes iva-despues umbral-50 andamiaje verificar hecho-falso puerta-prueba orquestar cuadre ticket-005 bucle-25 final)
+RAMAS=(master iva-antes iva-despues umbral-50 andamiaje verificar hecho-falso puerta-prueba orquestar cuadre ticket-005 bucle-25 final robot)
 
 # Etiquetas de las rúbricas: verificar.sh compara con ellas (criterio A5).
 ETIQUETAS=(
@@ -14,6 +14,7 @@ ETIQUETAS=(
   "rubrica-ticket-004-v1 d265135"
   "rubrica-ticket-004 0ad4487"
   "rubrica-ticket-005 6ff1952"
+  "rubrica-ticket-006 fafd142"
 )
 
 # Qué se espera de cada rama. npm: código de npm test. verificar: código de ./verificar.sh sin argumentos
@@ -33,6 +34,8 @@ esperado() {
     # Vídeo 26: ticket-005 es el proyecto final; en final está por hacer, en ticket-005 está hecho.
     final) npm=0 verificar=0 extra=("oculta 004 0" "verificar ticket-005 1" "oculta 005 1") ;;
     ticket-005) npm=0 verificar=0 extra=("verificar ticket-005 0" "oculta 005 0") ;;
+    # Vídeo 28: la rama del robot, con ticket-006 por hacer (el importe sin valor del 26).
+    robot) npm=0 verificar=0 extra=("verificar ticket-006 1" "oculta 006 1" "oculta 005 0") ;;
     *) return 1 ;;
   esac
 }

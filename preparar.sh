@@ -16,14 +16,14 @@ RAIZ="$(cd "$(dirname "$0")" && pwd)"
 TIENDA="$RAIZ/tienda"
 EXT="$RAIZ/extensiones"
 
-# Las etiquetas de las rúbricas que usa ./verificar.sh (vídeos 24-26). No viajan con las ramas, así que se
+# Las etiquetas de las rúbricas que usa ./verificar.sh (vídeos 24-28). No viajan con las ramas, así que se
 # crean aquí, sobre los mismos commits que en las grabaciones.
-ETIQUETAS="rubrica-ticket-003:3a36c10 rubrica-ticket-004-v1:d265135 rubrica-ticket-004:0ad4487 rubrica-ticket-005:6ff1952"
+ETIQUETAS="rubrica-ticket-003:3a36c10 rubrica-ticket-004-v1:d265135 rubrica-ticket-004:0ad4487 rubrica-ticket-005:6ff1952 rubrica-ticket-006:fafd142"
 
 # Las ramas de referencia y su commit. No se tocan nunca; solo se avisa si han cambiado.
 REFERENCIAS="master:f27bfae iva-antes:6027f5b iva-despues:c8aba9e umbral-50:8136ca8 andamiaje:ddcd483
 verificar:a0751bb hecho-falso:637b94d puerta-prueba:648d709 orquestar:0ad4487 cuadre:3f69f1d bucle-25:064a256
-final:6ff1952 ticket-005:afc315d"
+final:6ff1952 ticket-005:afc315d robot:616ff2f"
 
 # vídeo|parte|commit de partida|herramienta|título|demo
 TABLA='01||-|pi y omp|Qué es un harness|-
@@ -53,7 +53,9 @@ TABLA='01||-|pi y omp|Qué es un harness|-
 24||0ae405a|pi|Verificar de verdad|/demo-24-marcar-pasa
 24|omp|7be4971|omp|Verificar de verdad|/demo-24-siguiente
 25||0ad4487|omp|Bucles, grafos y el coste de orquestar|/demo-25-bucle
-26||6ff1952|pi y omp|Proyecto final|/demo-26-plan (omp) y /demo-26-implementa (pi)'
+26||6ff1952|pi y omp|Proyecto final|/demo-26-plan (omp) y /demo-26-implementa (pi)
+27||-|omp y pi|De fallos a regresiones|-
+28||-|omp|Agentes que trabajan sin ti|-'
 
 notas() {
   case "$1" in
@@ -101,6 +103,11 @@ La parte de oh my pi parte de otro commit: ./preparar.sh 24 omp, y omp --hook \"
 medir/orquestar.sh lanza agentes desatendidos y necesita las etiquetas rubrica-*." ;;
     26) echo "Primero el plan con omp (/plan; se guarda fuera del repositorio), después la implementación con Pi:
 pi -e \"$EXT/puerta.ts\". El vídeo usa un remoto bare local para la petición de cambios; no hace falta." ;;
+    27) echo "Los scripts están en $RAIZ/regresiones (lee su README): crean sus propios worktrees desde ticket-005 y
+no tocan tus ramas. Copia antes la sesión que quieras estudiar: no abras nunca la original." ;;
+    28) echo "El robot está en $RAIZ/robot (lee su README): trabaja en worktrees desde la rama robot, con el perfil de
+oh my pi robot (cp $RAIZ/robot/perfil/config.yml ~/.omp/profiles/robot/agent/config.yml) y entrega en el remoto
+bare revision del vídeo 26 (git init --bare ~/csn/remoto/tienda.git && git -C $TIENDA remote add revision ../remoto/tienda.git)." ;;
   esac
 }
 
