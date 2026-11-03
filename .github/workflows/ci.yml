@@ -1,0 +1,75 @@
+# La tienda y preparar.sh, sin ninguna clave de API.
+# Ojo: un push a una rama tienda/* no lanza este workflow (esas ramas no lo tienen). Sus cambios se prueban en
+# el siguiente push o pull request a main, o a mano desde la pestaña Actions.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ramas:
+    name: Ramas de la tienda
+    runs-on: ubuntu-latest
+    outputs:
+      ramas: ${{ steps.lista.outputs.ramas }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Ramas con resultado esperado
+        id: lista
+        run: echo "ramas=$(bash .github/scripts/tienda.sh --ramas)" >> "$GITHUB_OUTPUT"
+
+  tienda:
+    name: tienda/${{ matrix.rama }}
+    needs: ramas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        rama: ${{ fromJSON(needs.ramas.outputs.ramas) }}
+    steps:
+      - name: Materiales (scripts y fuera/)
+        uses: actions/checkout@v4
+        with:
+          path: materiales
+      - name: La rama de la tienda, con su historia (verificar.sh la necesita)
+        uses: actions/checkout@v4
+        with:
+          ref: tienda/${{ matrix.rama }}
+          path: tienda
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: npm test y ./verificar.sh contra el resultado esperado
+        run: bash materiales/.github/scripts/tienda.sh "${{ matrix.rama }}" tienda materiales/fuera
+
+  preparar:
+    name: preparar.sh en un clon limpio
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: csn
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Los scripts del curso esperan la carpeta en ~/csn.
+      - name: El clon, a ~/csn
+        run: cp -a csn ~/csn
+      - name: Comprobar preparar.sh
+        run: bash ~/csn/.github/scripts/preparar-limpio.sh ~/csn
