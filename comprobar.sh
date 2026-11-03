@@ -65,7 +65,7 @@ necesita_etiqueta() {
 pi_rpc() {
   local tmp; tmp=$(mktemp -d)
   (cd "$tmp" && { echo '{"id":"c","type":"get_commands"}'; sleep 3; } \
-    | PI_CODING_AGENT_DIR="$tmp" PI_SKIP_VERSION_CHECK=1 pi --mode rpc --no-session --no-skills -np -e "$1" 2>&1)
+    | PI_CODING_AGENT_DIR="$tmp" PI_SKIP_VERSION_CHECK=1 pi --mode rpc --no-session --no-skills -e "$1" 2>&1)
   rm -rf "$tmp"
 }
 pi_carga() { pi_rpc "$1" | grep -q '"command":"get_commands","success":true'; }
