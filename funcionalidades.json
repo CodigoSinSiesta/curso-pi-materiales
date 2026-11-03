@@ -147,6 +147,22 @@
         }
       ],
       "notas": "Implementado en src/carrito.js. totalConCupon acepta { importe } (euros): valida que sea un número finito mayor que 0 (TypeError si no), lo resta una sola vez al subtotal con Math.max(0, subtotal − importe) y redondea a céntimos; el cupón { porcentaje } no cambia. totalConEnvio, desglose y ticket lo usan sin cambios."
+    },
+    {
+      "id": "ticket-006",
+      "prioridad": 6,
+      "area": "pedido",
+      "titulo": "Cupón con importe sin valor",
+      "comportamiento": "totalConCupon(lineas, cupon), en src/carrito.js, lanza TypeError si el cupón tiene la propiedad importe y su valor no es un número finito mayor que 0, también cuando es undefined, null o NaN. Hoy { importe: undefined } se escapa de la validación y devuelve NaN. El cupón { porcentaje } no cambia.",
+      "estado": "sin_empezar",
+      "rubrica": "rubricas/ticket-006.md",
+      "verificacion": [
+        "./verificar.sh ticket-006",
+        "Criterios en rubricas/ticket-006.md: A1–A5 los comprueba verificar.sh; J1–J3 los puntúa un revisor.",
+        "{ importe: undefined } y { importe: null } lanzan TypeError; { porcentaje: 10 } sigue dando 37,80 € en el pedido de la frontera."
+      ],
+      "evidencias": [],
+      "notas": ""
     }
   ]
 }
