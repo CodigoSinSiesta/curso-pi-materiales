@@ -1,0 +1,119 @@
+name: Algo no me funciona
+description: Un comando, un script o una rama de la tienda no hace lo que se ve en el vídeo.
+title: "[Vídeo NN] "
+labels: ["no funciona"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes, busca el mensaje en [PROBLEMAS.md](https://github.com/CodigoSinSiesta/curso-pi-materiales/blob/main/PROBLEMAS.md): muchos fallos ya tienen arreglo.
+  - type: markdown
+    attributes:
+      value: |
+        **No pegues claves de API, tokens ni contraseñas**, ni en los comandos ni en la salida. Si aparecen, cámbialos por `***`. Revisa también las rutas: pueden llevar tu nombre de usuario.
+  - type: dropdown
+    id: video
+    attributes:
+      label: Vídeo
+      options:
+        - "01 · Qué es un harness"
+        - "02 · Instalar Pi y primera tarea"
+        - "03 · Pi por dentro"
+        - "04 · Modelos y proveedores"
+        - "05 · Seguridad y aislamiento"
+        - "06 · Personalizar Pi sin código"
+        - "07 · MCP y codemode"
+        - "08 · Extensiones I"
+        - "09 · Extensiones II: estado y paquetes"
+        - "10 · Pi programático"
+        - "11 · De Pi a oh my pi"
+        - "12 · La TUI y las sesiones"
+        - "13 · Contexto y memoria"
+        - "14 · Modelos, roles y razonamiento"
+        - "15 · Planificar y dirigir"
+        - "16 · Subagentes y trabajo en paralelo"
+        - "17 · El IDE integrado"
+        - "18 · Git, calidad y entrega"
+        - "19 · Aprobaciones, reglas y hooks"
+        - "20 · Extender oh my pi"
+        - "21 · oh my pi programático, métricas y equipo"
+        - "22 · Diseñar tu harness"
+        - "23 · El repo como sistema de registro"
+        - "24 · Verificar de verdad"
+        - "25 · Bucles, grafos y coste"
+        - "26 · Proyecto final"
+        - "Ninguno: es del repositorio (preparar.sh, la tienda, el CI)"
+    validations:
+      required: true
+  - type: input
+    id: pi
+    attributes:
+      label: Versión de Pi
+      description: La salida de `pi --version`. Si no lo usas, pon «no».
+      placeholder: "1.4.0"
+    validations:
+      required: true
+  - type: input
+    id: omp
+    attributes:
+      label: Versión de oh my pi
+      description: La salida de `omp --version`. Si no lo usas, pon «no».
+      placeholder: "omp/18.13.3"
+    validations:
+      required: true
+  - type: dropdown
+    id: sistema
+    attributes:
+      label: Sistema
+      options:
+        - macOS
+        - Linux
+        - Windows (WSL)
+        - Windows (nativo)
+        - Docker o máquina virtual
+        - Otro
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Versión de Node (y de Bun, si usas oh my pi o sdk-omp)
+      placeholder: "Node 22.20.0 · Bun 1.4.4"
+  - type: input
+    id: modelo
+    attributes:
+      label: Modelo y proveedor
+      description: Tal como lo pasas en `--model` o lo eliges en `/model`. Solo el nombre, nunca la clave.
+      placeholder: "deepseek/deepseek-flash"
+    validations:
+      required: true
+  - type: textarea
+    id: comando
+    attributes:
+      label: Comando
+      description: Lo que has ejecutado, y en qué carpeta y rama (`pwd`, `git branch --show-current`).
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: salida
+    attributes:
+      label: Salida
+      description: Lo que ha salido, entero si es corto. Si es largo, desde el primer error.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Qué esperabas
+      description: Lo que se ve en el vídeo o en la guía.
+  - type: checkboxes
+    id: claves
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: He buscado el mensaje en PROBLEMAS.md.
+          required: true
+        - label: No he pegado claves, tokens ni contraseñas.
+          required: true

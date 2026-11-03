@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Problemas conocidos
+    url: https://github.com/CodigoSinSiesta/curso-pi-materiales/blob/main/PROBLEMAS.md
+    about: Lo que ves, qué significa y cómo se arregla, por secciones. Míralo antes de abrir un issue.
+  - name: El curso en Código Sin Siesta
+    url: https://codigosinsiesta.com/rutas/pi-oh-my-pi
+    about: Los vídeos y las guías, con los comandos de cada demo.

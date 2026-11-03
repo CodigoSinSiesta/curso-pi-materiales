@@ -1,0 +1,71 @@
+name: Duda sobre un vídeo
+description: Algo de un vídeo no se entiende, no cuadra o te falta un paso.
+title: "[Vídeo NN] "
+labels: ["duda"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por preguntar. Antes, mira la guía del vídeo en [codigosinsiesta.com](https://codigosinsiesta.com/rutas/pi-oh-my-pi): suele tener los comandos exactos.
+  - type: markdown
+    attributes:
+      value: |
+        **No pegues claves de API, tokens ni contraseñas**, ni en los comandos ni en la salida. Si aparecen, cámbialos por `***`. Revisa también las rutas: pueden llevar tu nombre de usuario.
+  - type: dropdown
+    id: video
+    attributes:
+      label: Vídeo
+      options:
+        - "01 · Qué es un harness"
+        - "02 · Instalar Pi y primera tarea"
+        - "03 · Pi por dentro"
+        - "04 · Modelos y proveedores"
+        - "05 · Seguridad y aislamiento"
+        - "06 · Personalizar Pi sin código"
+        - "07 · MCP y codemode"
+        - "08 · Extensiones I"
+        - "09 · Extensiones II: estado y paquetes"
+        - "10 · Pi programático"
+        - "11 · De Pi a oh my pi"
+        - "12 · La TUI y las sesiones"
+        - "13 · Contexto y memoria"
+        - "14 · Modelos, roles y razonamiento"
+        - "15 · Planificar y dirigir"
+        - "16 · Subagentes y trabajo en paralelo"
+        - "17 · El IDE integrado"
+        - "18 · Git, calidad y entrega"
+        - "19 · Aprobaciones, reglas y hooks"
+        - "20 · Extender oh my pi"
+        - "21 · oh my pi programático, métricas y equipo"
+        - "22 · Diseñar tu harness"
+        - "23 · El repo como sistema de registro"
+        - "24 · Verificar de verdad"
+        - "25 · Bucles, grafos y coste"
+        - "26 · Proyecto final"
+    validations:
+      required: true
+  - type: input
+    id: minuto
+    attributes:
+      label: Minuto o apartado
+      placeholder: "12:30, o «la demo de la puerta»"
+  - type: textarea
+    id: duda
+    attributes:
+      label: Tu duda
+      description: Qué no entiendes o qué esperabas ver.
+    validations:
+      required: true
+  - type: input
+    id: versiones
+    attributes:
+      label: Versiones de Pi y de oh my pi, si las usas
+      description: La salida de `pi --version` y de `omp --version`.
+      placeholder: "Pi 1.4.0 · oh my pi 18.13.3"
+  - type: checkboxes
+    id: claves
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: No he pegado claves, tokens ni contraseñas.
+          required: true
