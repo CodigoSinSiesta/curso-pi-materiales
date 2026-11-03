@@ -14,7 +14,7 @@ cd ~/csn && ./preparar.sh
 cd tienda && npm test
 ```
 
-`preparar.sh` convierte `tienda/` y `extensiones/` en repositorios git propios, con las ramas de cada vídeo. Ejecútalo una sola vez.
+`preparar.sh` convierte `tienda/` y `extensiones/` en repositorios git propios, con las ramas de cada vídeo. Basta con ejecutarlo una vez; repetirlo no toca lo que ya existe.
 
 Necesitas Node 22.19 o posterior, git, [Pi](https://github.com/earendil-works/pi) y, desde el vídeo 11, [oh my pi](https://github.com/can1357/oh-my-pi). Las claves de API van en variables de entorno o en `/login`; nunca en estos ficheros.
 

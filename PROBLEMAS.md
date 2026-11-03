@@ -13,6 +13,7 @@ Si tu problema no está aquí, [abre un issue](https://github.com/CodigoSinSiest
 - [La tienda y las ramas](#la-tienda-y-las-ramas)
 - [Extensiones](#extensiones)
 - [CI, RPC y SDK](#ci-rpc-y-sdk)
+- [Si cambia una versión](#si-cambia-una-versión)
 
 ## Instalación
 
