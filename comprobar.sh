@@ -42,10 +42,10 @@ estado_de() {   # estado_de ticket-003 → «pasa 3» (estado y número de evide
 verificar_sale_0() {
   local salida codigo
   salida=$(cd "$TIENDA" && ./verificar.sh "$@" 2>&1); codigo=$?
-  if [ "$codigo" = 0 ]; then bien "./verificar.sh $* sale con 0"
+  if [ "$codigo" = 0 ]; then bien "./verificar.sh${*:+ $*} sale con 0"
   else
     [ "$codigo" = 1 ] || mal "./verificar.sh solo debe salir con 0 o 1 (ha salido con $codigo)" "restaura verificar.sh de la rúbrica"
-    mal "./verificar.sh $* sale con 0 (ha salido con $codigo)" "lee los ERROR / POR QUÉ / CÓMO de su salida:"
+    mal "./verificar.sh${*:+ $*} sale con 0 (ha salido con $codigo)" "lee los ERROR / POR QUÉ / CÓMO de su salida:"
     echo "$salida" | grep -E "ERROR|POR QUÉ|CÓMO|not ok|✖" | head -8 | sed 's/^/           /'
   fi
 }
