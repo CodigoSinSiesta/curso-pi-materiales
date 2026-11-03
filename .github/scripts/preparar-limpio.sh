@@ -41,7 +41,7 @@ for e in rubrica-ticket-003 rubrica-ticket-004-v1 rubrica-ticket-004 rubrica-tic
   git -C tienda rev-parse -q --verify "refs/tags/$e" > /dev/null || faltan+=("$e")
 done
 if [ ${#faltan[@]} = 0 ]; then ok "las etiquetas rubrica-* llegan a tienda/"
-else roto "faltan las etiquetas ${faltan[*]} en tienda/: sin ellas ./verificar.sh falla siempre en A5 («no hay ninguna etiqueta rubrica-*»). Hay que publicarlas en el remoto (git push origin ${faltan[*]})."; fi
+else roto "faltan las etiquetas ${faltan[*]} en tienda/: sin ellas ./verificar.sh falla siempre en A5 («no hay ninguna etiqueta rubrica-*»). preparar.sh tiene que crearlas, o hay que publicarlas en el remoto."; fi
 
 if [ -z "$(git status --porcelain)" ]; then ok "el repositorio de materiales no ve cambios en tienda/ ni extensiones/"
 else roto "tras preparar.sh, git status muestra cambios: $(git status --porcelain | head -n 5 | tr '\n' ' ')"; fi
